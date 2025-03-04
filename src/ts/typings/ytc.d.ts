@@ -43,11 +43,24 @@ declare namespace Ytc {
     replayChatItemAction?: ReplayChatItemAction;
     markChatItemsByAuthorAsDeletedAction?: AuthorBonkedAction;
     markChatItemAsDeletedAction?: MessageDeletedAction;
+    liveChatReportPresenceCommand?: LiveChatReportPresenceCommand;
   }
 
   /*
    * Actions
    */
+
+ interface LiveChatReportPresenceCommand {
+    liveChatUserPresent: LiveChatUserPresent;
+    presentAtMs: IntString;
+ }
+
+ interface LiveChatUserPresent {
+    externalVideoId: string;
+    isModerator: boolean;
+    externalChannelId: string;
+ }
+
   /** YTC addChatItemAction object */
   interface AddChatItemAction {
     item: AddChatItem;
@@ -451,7 +464,7 @@ declare namespace Ytc {
     detailText?: string;
   }
 
-  type ParsedMisc = ParsedPinned | ParsedSummary | ParsedRedirect | { type: 'unpin' };
+  type ParsedMisc = ParsedPinned | ParsedSummary | ParsedRedirect | { type: 'unpin' } | { type: 'presence' };
 
   type ParsedTimedItem = ParsedMessage | ParsedTicker;
 
