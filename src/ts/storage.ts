@@ -77,6 +77,7 @@ export const isDark = derived(theme, ($theme) => {
   );
 });
 export const ytDark = writable(false);
+export const isModerator = writable(false);
 export const currentProgress = writable(null as null | number);
 export const enableStickySuperchatBar = stores.addSyncStore('hc.enableStickySuperchatBar', true);
 export const enableHighlightedMentions = stores.addSyncStore('hc.enableHighlightedMentions', true);
