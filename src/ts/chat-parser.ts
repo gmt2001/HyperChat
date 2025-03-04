@@ -5,6 +5,8 @@ import {
   isMembershipGiftPurchaseRenderer
 } from './chat-utils';
 
+import { isModerator } from './storage';
+
 const currentDomain = location.protocol.includes('youtube') ? (location.protocol + '//' + location.host) : 'https://www.youtube.com';
 
 // Source: https://stackoverflow.com/a/64396666
@@ -66,7 +68,7 @@ const parseMessageRuns = (runs?: Ytc.MessageRun[]): Ytc.ParsedRun[] => {
 // takes an array of runs, finds newline-only runs, and splits the array by them, up to maxSplit times
 // final output will have maximum length of maxSplit + 1
 // maxSplit = -1 will have no limit for splits
-const splitRunsByNewline = (runs: Ytc.ParsedRun[], maxSplit: number = -1): Ytc.ParsedRun[][] => 
+const splitRunsByNewline = (runs: Ytc.ParsedRun[], maxSplit: number = -1): Ytc.ParsedRun[][] =>
   runs.reduce((acc: Ytc.ParsedRun[][], run: Ytc.ParsedRun) => {
     if (run.type === 'text' && run.text === '\n' && (maxSplit == -1 || acc.length <= maxSplit)) {
       acc.push([]);
@@ -117,9 +119,9 @@ const parseRedirectBanner = (renderer: Ytc.AddChatItem, showtime: number): Ytc.P
     src: fixUrl(baseRenderer.authorPhoto?.thumbnails[0].url ?? ''),
     alt: 'Redirect profile icon'
   };
-  const url = baseRenderer.inlineActionButton?.buttonRenderer.command.urlEndpoint?.url || 
+  const url = baseRenderer.inlineActionButton?.buttonRenderer.command.urlEndpoint?.url ||
     (baseRenderer.inlineActionButton?.buttonRenderer.command.watchEndpoint?.videoId ?
-       "/watch?v=" + baseRenderer.inlineActionButton?.buttonRenderer.command.watchEndpoint?.videoId 
+       "/watch?v=" + baseRenderer.inlineActionButton?.buttonRenderer.command.watchEndpoint?.videoId
        : '');
   const item: Ytc.ParsedRedirect = {
     type: 'redirect',
@@ -309,6 +311,11 @@ const parseTickerAction = (action: Ytc.AddTickerAction, isReplay: boolean, liveT
   };
 };
 
+const parsePresenceCommand = (action: Ytc.LiveChatReportPresenceCommand): Ytc.Misc | undefined => {
+  isModerator.set(action.liveChatUserPresent.isModerator);
+  return { type: 'presence' } as const;
+};
+
 const processCommonAction = (
   action: Ytc.ReplayAction,
   isReplay: boolean,
@@ -333,6 +340,8 @@ const processLiveAction = (action: Ytc.Action, isReplay: boolean, liveTimeoutMs:
     return parseAuthorBonkedAction(action.markChatItemsByAuthorAsDeletedAction);
   } else if (action.markChatItemAsDeletedAction) {
     return parseMessageDeletedAction(action.markChatItemAsDeletedAction);
+  } else if (action.liveChatReportPresenceCommand) {
+    return parsePresenceCommand(action.liveChatReportPresenceCommand);
   }
 };
 
