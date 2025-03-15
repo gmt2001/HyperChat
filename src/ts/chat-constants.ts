@@ -28,6 +28,12 @@ export const emojiRenderItems = [
 export enum ChatUserActions {
   BLOCK = 'BLOCK',
   REPORT_USER = 'REPORT_USER',
+  REMOVE = 'REMOVE',
+  CHANNEL_ACTIVITY = 'CHANNEL_ACTIVITY',
+  GO_TO_CHANNEL = 'GO_TO_CHANNEL',
+  TIMEOUT = 'TIMEOUT',
+  BAN = 'BAN',
+  UNBAN = 'UNBAN',
 }
 
 export enum ChatReportUserOptions {
@@ -52,24 +58,115 @@ export const chatReportUserOptions = [
   { value: ChatReportUserOptions.MISINFORMATION, label: 'Misinformation' }
 ];
 
+export enum ChatTimeoutOptions {
+  TEN_SEC = 'TEN_SEC',
+  ONE_MIN = 'ONE_MIN',
+  FIVE_MIN = 'FIVE_MIN',
+  TEN_MIN = 'TEN_MIN',
+  THIRTY_MIN = 'THIRTY_MIN',
+  ONE_DAY = 'ONE_DAY'
+}
+
+export const chatTimeoutOptions = [
+  { value: ChatTimeoutOptions.TEN_SEC, label: '10 seconds' },
+  { value: ChatTimeoutOptions.ONE_MIN, label: '1 minute' },
+  { value: ChatTimeoutOptions.FIVE_MIN, label: '5 minutes' },
+  { value: ChatTimeoutOptions.TEN_MIN, label: '10 minutes' },
+  { value: ChatTimeoutOptions.THIRTY_MIN, label: '30 minutes' },
+  { value: ChatTimeoutOptions.ONE_DAY, label: '24 hours' }
+];
+
 export const chatUserActionsItems = [
   {
+    value: ChatUserActions.CHANNEL_ACTIVITY,
+    text: 'Channel Activity',
+    condition: [
+      {
+        isModerator: true
+      }
+    ]
+  },
+  {
+    value: ChatUserActions.GO_TO_CHANNEL,
+    text: 'Go to channel',
+    condition: [
+      {
+        isModerator: true
+      }
+    ]
+  },
+  {
+    value: ChatUserActions.REPORT_USER,
+    text: 'Report',
+    icon: 'flag',
+    condition: [
+      {
+        isSelf: false
+      }
+    ],
+    messages: {
+      success: 'The user has been reported for review by YouTube staff.',
+      error: 'There was an error reporting the user. Please try again later.'
+    }
+  },
+  {
     value: ChatUserActions.BLOCK,
-    text: 'Block user',
+    text: 'Block',
     icon: 'block',
+    condition: [
+      {
+        isModerator: false,
+        isSelf: false
+      }
+    ],
     messages: {
       success: 'The user has been blocked, and you will no longer see their messages. It may take several minutes for the setting to take full effect. You can unblock users in the settings panel at any time.',
       error: 'There was an error blocking the user. It is possible that this user has already been blocked. If not, please try again later.'
     }
   },
   {
-    value: ChatUserActions.REPORT_USER,
-    text: 'Report user',
-    icon: 'flag',
-    messages: {
-      success: 'The user has been reported for review by YouTube staff.',
-      error: 'There was an error reporting the user. Please try again later.'
-    }
+    value: ChatUserActions.REMOVE,
+    text: 'Remove',
+    condition: [
+      {
+        isModerator: true,
+        isMessageRemoved: false
+      },
+      {
+        isSelf: true,
+        isMessageRemoved: false
+      }
+    ]
+  },
+  {
+    value: ChatUserActions.TIMEOUT,
+    text: 'Put user in timeout',
+    condition: [
+      {
+        isModerator: true,
+        isReplay: false
+      }
+    ]
+  },
+  {
+    value: ChatUserActions.BAN,
+    text: 'Hide user on this channel',
+    condition: [
+      {
+        isModerator: true,
+        isBanned: false
+      }
+    ]
+  },
+  {
+    value: ChatUserActions.UNBAN,
+    text: 'Unhide user on this channel',
+    condition: [
+      {
+        isModerator: true,
+        isBanned: true
+      }
+    ]
   }
 ];
 
