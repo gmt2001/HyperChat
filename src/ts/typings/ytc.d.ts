@@ -432,6 +432,7 @@ declare namespace Ytc {
       url?: string;
     };
     message: ParsedRun[];
+    deletedMessage: ParsedRun[];
     timestamp: string;
     showtime: number;
     messageId: string;
