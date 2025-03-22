@@ -10,6 +10,8 @@
     showUserBadges,
     hoveredItem,
     port,
+    isModerator,
+    isReplay,
     selfChannelId
   } from '../ts/storage';
   import { chatUserActionsItems, Theme } from '../ts/chat-constants';
@@ -18,9 +20,12 @@
 
   export let message: Ytc.ParsedMessage;
   export let deleted: Chat.MessageDeletedObj | null = null;
+  export let banned = false;
   export let forceDark = false;
   export let hideName = false;
   export let hideDropdown = false;
+
+  let isSelf = message.author.id === $selfChannelId;
 
   const nameClass = 'font-bold tracking-wide align-middle';
   const generateNameColorClass = (member: boolean, moderator: boolean, owner: boolean, forceDark: boolean) => {
@@ -56,7 +61,11 @@
   $: nameColorClass = generateNameColorClass(member, moderator, owner, forceDark);
 
   $: if (deleted != null) {
-    message.message = deleted.replace;
+    if ($isModerator) {
+      message.deletedMessage = deleted.replace;
+    } else {
+      message.message = deleted.replace;
+    }
   }
 
   $: showUserMargin = $showProfileIcons || $showUsernames || $showTimestamps ||
@@ -64,7 +73,36 @@
 
   export let forceTLColor: Theme = Theme.YOUTUBE;
 
-  const menuItems = chatUserActionsItems.map((d) => ({
+  $: menuItems = chatUserActionsItems.filter((d) =>{
+    if (d.condition && d.condition.length > 0) {
+      let hasOneCondition = false;
+      for (let condition of d.condition) {
+        let pass = true;
+        if (condition.hasOwnProperty('isModerator') && condition.isModerator != $isModerator) {
+          pass = false;
+        }
+        if (condition.hasOwnProperty('isSelf') && condition.isSelf != isSelf) {
+          pass = false;
+        }
+        if (condition.hasOwnProperty('isMessageRemoved') && ((condition.isMessageRemoved && deleted != null) || (!condition.isMessageRemoved && deleted == null))) {
+          pass = false;
+        }
+        if (condition.hasOwnProperty('isReplay') && condition.isReplay != $isReplay) {
+          pass = false;
+        }
+        if (condition.hasOwnProperty('isBanned') && condition.isBanned != banned) {
+          pass = false;
+        }
+        if (pass) {
+          hasOneCondition = true;
+        }
+      }
+
+      return hasOneCondition;
+    }
+
+    return true;
+  }).map((d) => ({
     icon: d.icon,
     text: d.text,
     value: d.value.toString(),
@@ -135,6 +173,7 @@
     {/if}
     <MessageRun
       runs={message.message}
+      deletedRuns={message.deletedMessage}
       {forceDark}
       deleted={deleted != null}
       {forceTLColor}
@@ -152,7 +191,7 @@
       </svg>
     {/if}
   </div>
-  {#if message.author.id !== $selfChannelId && !hideDropdown}
+  {#if !hideDropdown}
     <Menu items={menuItems} visible={$hoveredItem === message.messageId} class="mr-2 ml-auto context-menu">
       <Icon slot="activator" style="font-size: 1.5em;">more_vert</Icon>
     </Menu>
