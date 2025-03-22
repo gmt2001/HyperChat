@@ -80,6 +80,7 @@ export const chatUserActionsItems = [
   {
     value: ChatUserActions.CHANNEL_ACTIVITY,
     text: 'Channel Activity',
+    icon: 'WATCH_HISTORY',
     condition: [
       {
         isModerator: true
@@ -89,6 +90,7 @@ export const chatUserActionsItems = [
   {
     value: ChatUserActions.GO_TO_CHANNEL,
     text: 'Go to channel',
+    icon: 'ACCOUNT_CIRCLE',
     condition: [
       {
         isModerator: true
@@ -98,7 +100,7 @@ export const chatUserActionsItems = [
   {
     value: ChatUserActions.REPORT_USER,
     text: 'Report',
-    icon: 'flag',
+    icon: 'FLAG',
     condition: [
       {
         isSelf: false
@@ -112,7 +114,7 @@ export const chatUserActionsItems = [
   {
     value: ChatUserActions.BLOCK,
     text: 'Block',
-    icon: 'block',
+    icon: 'NOT_INTERESTED',
     condition: [
       {
         isModerator: false,
@@ -127,6 +129,7 @@ export const chatUserActionsItems = [
   {
     value: ChatUserActions.REMOVE,
     text: 'Remove',
+    icon: 'DELETE',
     condition: [
       {
         isModerator: true,
@@ -141,6 +144,7 @@ export const chatUserActionsItems = [
   {
     value: ChatUserActions.TIMEOUT,
     text: 'Put user in timeout',
+    icon: 'HOURGLASS',
     condition: [
       {
         isModerator: true,
@@ -151,6 +155,7 @@ export const chatUserActionsItems = [
   {
     value: ChatUserActions.BAN,
     text: 'Hide user on this channel',
+    icon: 'REMOVE_CIRCLE',
     condition: [
       {
         isModerator: true,
@@ -161,6 +166,7 @@ export const chatUserActionsItems = [
   {
     value: ChatUserActions.UNBAN,
     text: 'Unhide user on this channel',
+    icon: 'ADD_CIRCLE',
     condition: [
       {
         isModerator: true,
