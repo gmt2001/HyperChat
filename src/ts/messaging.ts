@@ -2,6 +2,7 @@ import type { Unsubscriber } from './queue';
 import { ytcQueue } from './queue';
 import sha1 from 'sha-1';
 import { chatReportUserOptions, ChatUserActions, ChatReportUserOptions } from '../ts/chat-constants';
+import { isReplay } from './storage';
 
 const currentDomain = location.protocol.includes('youtube') ? (location.protocol + '//' + location.host) : 'https://www.youtube.com';
 
@@ -299,10 +300,11 @@ const executeChatAction = async (
 export const initInterceptor = (
   source: Chat.InterceptorSource,
   ytcfg: YtCfg,
-  isReplay?: boolean
+  isReplayL?: boolean
 ): void => {
   if (source === 'ytc') {
-    const queue = ytcQueue(isReplay);
+    const queue = ytcQueue(isReplayL);
+    isReplay.set(isReplayL);
     let queueUnsub: Unsubscriber | undefined;
     const ytcInterceptor: Chat.YtcInterceptor = {
       ...interceptor,
