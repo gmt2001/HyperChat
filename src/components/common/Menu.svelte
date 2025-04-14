@@ -98,9 +98,13 @@
                   on:click={() => { onItemClick(item); }}
                   style="padding: 0.5em 1em"
                 >
-                  <Icon class="pr-6">
-                    {item.icon}
-                  </Icon>
+                  {#if item.iconType != null && item.iconType == 'YT_SVG'}
+                    <YT_SVG icon={item.icon}/>
+                  {:else}
+                    <Icon class="pr-6">
+                      {item.icon}
+                    </Icon>
+                  {/if}
                   <span>{item.text}</span>
                 </li>
               {/each}
