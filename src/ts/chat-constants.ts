@@ -26,14 +26,14 @@ export const emojiRenderItems = [
 ];
 
 export enum ChatUserActions {
-  BLOCK = 'BLOCK',
-  REPORT_USER = 'REPORT_USER',
-  REMOVE = 'REMOVE',
-  CHANNEL_ACTIVITY = 'CHANNEL_ACTIVITY',
-  GO_TO_CHANNEL = 'GO_TO_CHANNEL',
-  TIMEOUT = 'TIMEOUT',
-  BAN = 'BAN',
-  UNBAN = 'UNBAN',
+  BLOCK = 'NOT_INTERESTED',
+  REPORT_USER = 'FLAG',
+  REMOVE = 'DELETE',
+  CHANNEL_ACTIVITY = 'WATCH_HISTORY',
+  GO_TO_CHANNEL = 'ACCOUNT_CIRCLE',
+  TIMEOUT = 'HOURGLASS',
+  BAN = 'REMOVE_CIRCLE',
+  UNBAN = 'ADD_CIRCLE',
 }
 
 export enum ChatReportUserOptions {
