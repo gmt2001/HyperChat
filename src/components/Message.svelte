@@ -25,7 +25,7 @@
   export let hideName = false;
   export let hideDropdown = false;
 
-  let isSelf = message.author.id === $selfChannelId;
+  $: isSelf = message.author.id === $selfChannelId;
 
   const nameClass = 'font-bold tracking-wide align-middle';
   const generateNameColorClass = (member: boolean, moderator: boolean, owner: boolean, forceDark: boolean) => {
