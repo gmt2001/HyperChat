@@ -73,24 +73,24 @@
 
   export let forceTLColor: Theme = Theme.YOUTUBE;
 
-  $: menuItems = chatUserActionsItems.filter((d) =>{
+  $: menuItems = chatUserActionsItems.filter((d) => {
     if (d.condition && d.condition.length > 0) {
       let hasOneCondition = false;
-      for (let condition of d.condition) {
+      for (const condition of d.condition) {
         let pass = true;
-        if (condition.hasOwnProperty('isModerator') && condition.isModerator != $isModerator) {
+        if (condition.isModerator !== undefined && condition.isModerator !== $isModerator) {
           pass = false;
         }
-        if (condition.hasOwnProperty('isSelf') && condition.isSelf != isSelf) {
+        if (condition.isSelf !== undefined && condition.isSelf !== isSelf) {
           pass = false;
         }
-        if (condition.hasOwnProperty('isMessageRemoved') && ((condition.isMessageRemoved && deleted != null) || (!condition.isMessageRemoved && deleted == null))) {
+        if (condition.isMessageRemoved !== undefined && ((condition.isMessageRemoved && deleted !== null) || (!condition.isMessageRemoved && deleted === null))) {
           pass = false;
         }
-        if (condition.hasOwnProperty('isReplay') && condition.isReplay != $isReplay) {
+        if (condition.isReplay !== undefined && condition.isReplay !== $isReplay) {
           pass = false;
         }
-        if (condition.hasOwnProperty('isBanned') && condition.isBanned != banned) {
+        if (condition.isBanned !== undefined && condition.isBanned !== banned) {
           pass = false;
         }
         if (pass) {
