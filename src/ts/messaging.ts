@@ -1,7 +1,7 @@
 import type { Unsubscriber } from './queue';
 import { ytcQueue } from './queue';
 import sha1 from 'sha-1';
-import { chatReportUserOptions, ChatUserActions, ChatReportUserOptions } from '../ts/chat-constants';
+import { chatReportUserOptions, ChatUserActions, ChatReportUserOptions, ChatTimeoutOptions } from '../ts/chat-constants';
 import { isReplay } from './storage';
 
 const currentDomain = location.protocol.includes('youtube') ? (location.protocol + '//' + location.host) : 'https://www.youtube.com';
@@ -184,7 +184,8 @@ const executeChatAction = async (
   message: Ytc.ParsedMessage,
   ytcfg: YtCfg,
   action: ChatUserActions,
-  reportOption?: ChatReportUserOptions
+  reportOption?: ChatReportUserOptions,
+  timeoutOption?: ChatTimeoutOptions
 ): Promise<void> => {
   if (message.params == null) return;
 
@@ -240,10 +241,17 @@ const executeChatAction = async (
         context: clonedContext
       };
     }
+
+    let menuItems: {[k: string]: any} = {};
+    for (const menuItem of res.liveChatItemContextMenuSupportedRenderers.menuRenderer.items) {
+      const renderer = (menuItem.menuNavigationItemRenderer != undefined ? menuItem.menuNavigationItemRenderer : menuItem.menuServiceItemRenderer);
+      const icon= renderer.icon.iconType;
+      menuItems[icon] = renderer;
+    }
+
     if (action === ChatUserActions.BLOCK) {
       const { params, context } = parseServiceEndpoint(
-        res.liveChatItemContextMenuSupportedRenderers.menuRenderer.items[1]
-          .menuNavigationItemRenderer.navigationEndpoint.confirmDialogEndpoint
+        menuItems[ChatUserActions.BLOCK].navigationEndpoint.confirmDialogEndpoint
           .content.confirmDialogRenderer.confirmButton.buttonRenderer.serviceEndpoint,
         'moderateLiveChatEndpoint'
       );
@@ -256,7 +264,7 @@ const executeChatAction = async (
       });
     } else if (action === ChatUserActions.REPORT_USER) {
       const { params, context } = parseServiceEndpoint(
-        res.liveChatItemContextMenuSupportedRenderers.menuRenderer.items[0].menuServiceItemRenderer.serviceEndpoint,
+        menuItems[ChatUserActions.REPORT_USER].serviceEndpoint,
         'getReportFormEndpoint'
       );
       const modal = await fetcher(`${currentDomain}/youtubei/v1/flag/get_form?key=${apiKey}&prettyPrint=false`, {
@@ -278,6 +286,33 @@ const executeChatAction = async (
         ...heads,
         body: JSON.stringify({
           action: flagAction,
+          context
+        })
+      });
+    } else if (action === ChatUserActions.REMOVE || action === ChatUserActions.BAN || action === ChatUserActions.UNBAN) {
+      const { params, context } = parseServiceEndpoint(
+        menuItems[action].serviceEndpoint,
+        'moderateLiveChatEndpoint'
+      );
+      await fetcher(`${currentDomain}/youtubei/v1/live_chat/moderate?key=${apiKey}&prettyPrint=false`, {
+        ...heads,
+        body: JSON.stringify({
+          params,
+          context
+        })
+      });
+    } else if (action === ChatUserActions.TIMEOUT) {
+      if (timeoutOption === undefined) {
+        return;
+      }
+      const { params, context } = parseServiceEndpoint(
+        menuItems[action].serviceEndpoint.signalServiceEndpoint.actions[0].openPopupAction.popup.showActionDialogRenderer.body.showActionDialogContentRenderer.content.formRenderer.fields[0].optionsRenderer.items[timeoutOption].optionSelectableItemRenderer.submitEndpoint,
+        'moderateLiveChatEndpoint'
+      );
+      await fetcher(`${currentDomain}/youtubei/v1/live_chat/moderate?key=${apiKey}&prettyPrint=false`, {
+        ...heads,
+        body: JSON.stringify({
+          params,
           context
         })
       });
