@@ -11,6 +11,7 @@
   import Menu from 'smelte/src/components/Menu';
   import List from 'smelte/src/components/List';
   import Icon from './Icon.svelte';
+  import YtSvg from './YT_SVG.svelte';
   interface MenuItem {
     icon: string;
     value: string;
@@ -98,8 +99,8 @@
                   on:click={() => { onItemClick(item); }}
                   style="padding: 0.5em 1em"
                 >
-                  {#if item.iconType != null && item.iconType == 'YT_SVG'}
-                    <YT_SVG icon={item.icon}/>
+                  {#if item.iconType !== null && item.iconType === 'YT_SVG'}
+                    <YtSvg icon={item.icon}/>
                   {:else}
                     <Icon class="pr-6">
                       {item.icon}
