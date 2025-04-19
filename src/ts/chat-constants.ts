@@ -29,8 +29,6 @@ export enum ChatUserActions {
   BLOCK = 'NOT_INTERESTED',
   REPORT_USER = 'FLAG',
   REMOVE = 'DELETE',
-  CHANNEL_ACTIVITY = 'WATCH_HISTORY',
-  GO_TO_CHANNEL = 'ACCOUNT_CIRCLE',
   TIMEOUT = 'HOURGLASS',
   BAN = 'REMOVE_CIRCLE',
   UNBAN = 'ADD_CIRCLE',
@@ -77,28 +75,6 @@ export const chatTimeoutOptions = [
 ];
 
 export const chatUserActionsItems = [
-  {
-    value: ChatUserActions.CHANNEL_ACTIVITY,
-    text: 'Channel Activity',
-    icon: 'WATCH_HISTORY',
-    iconType: 'YT_SVG',
-    condition: [
-      {
-        isModerator: true
-      }
-    ]
-  },
-  {
-    value: ChatUserActions.GO_TO_CHANNEL,
-    text: 'Go to channel',
-    icon: 'ACCOUNT_CIRCLE',
-    iconType: 'YT_SVG',
-    condition: [
-      {
-        isModerator: true
-      }
-    ]
-  },
   {
     value: ChatUserActions.REPORT_USER,
     text: 'Report',
