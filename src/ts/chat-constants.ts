@@ -59,12 +59,12 @@ export const chatReportUserOptions = [
 ];
 
 export enum ChatTimeoutOptions {
-  TEN_SEC = 'TEN_SEC',
-  ONE_MIN = 'ONE_MIN',
-  FIVE_MIN = 'FIVE_MIN',
-  TEN_MIN = 'TEN_MIN',
-  THIRTY_MIN = 'THIRTY_MIN',
-  ONE_DAY = 'ONE_DAY'
+  TEN_SEC = 0,
+  ONE_MIN = 1,
+  FIVE_MIN = 2,
+  TEN_MIN = 3,
+  THIRTY_MIN = 4,
+  ONE_DAY = 5
 }
 
 export const chatTimeoutOptions = [
