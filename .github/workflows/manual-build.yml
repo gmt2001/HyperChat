@@ -2,7 +2,7 @@ name: Manual Build
 
 on:
   workflow_dispatch:
-    inuts:
+    inputs:
       version:
         required: true
         type: string
