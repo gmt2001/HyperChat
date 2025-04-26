@@ -296,7 +296,7 @@
       case 'ping':
         break;
       case 'presence':
-        console.log('isModerator=' + $isModerator)
+        console.log('isModerator=' + $isModerator);
         break;
       default:
         console.error('Unknown payload type', { port, response });

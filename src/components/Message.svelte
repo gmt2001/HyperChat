@@ -93,7 +93,7 @@
         if (condition.isBanned !== undefined && condition.isBanned !== banned) {
           pass = false;
         }
-        
+
         console.log({
           condition: condition,
           isModerator: $isModerator,
