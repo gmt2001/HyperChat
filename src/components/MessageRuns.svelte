@@ -81,6 +81,7 @@
   </span>
 {/if}
 {#if deletedRuns?.length}
+  <br/>
   <span
     class="cursor-auto align-middle {deletedClass} {$$props.class ?? ''}"
     style="word-break: break-word"
