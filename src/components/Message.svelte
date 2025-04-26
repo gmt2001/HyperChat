@@ -66,6 +66,7 @@
     } else {
       message.message = deleted.replace;
     }
+    console.log('deleted', message, deleted);
   }
   $: displayAuthorName = formatAuthorName(message.author.name);
 
