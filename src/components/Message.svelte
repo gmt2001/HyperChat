@@ -66,6 +66,7 @@
     } else {
       message.message = deleted.replace;
     }
+    console.log('deleted', message, deleted);
   }
 
   $: showUserMargin = $showProfileIcons || $showUsernames || $showTimestamps ||
