@@ -276,12 +276,14 @@
         $ytDark = response.dark;
         break;
       case 'chatUserActionResponse':
-        $alertDialog = {
-          title: response.success ? 'Success!' : 'Error',
-          message: chatUserActionsItems.find(v => v.value === response.action)
-            ?.messages[response.success ? 'success' : 'error'] ?? '',
-          color: response.success ? 'primary' : 'error'
-        };
+        let actionItem = chatUserActionsItems.find(v => v.value === response.action);
+        if (actionItem !== undefined && actionItem !== null && actionItem.messages !== undefined && actionItem.messages !== null) {
+          $alertDialog = {
+            title: response.success ? 'Success!' : 'Error',
+            message: actionItem?.messages[response.success ? 'success' : 'error'] ?? '',
+            color: response.success ? 'primary' : 'error'
+          };
+        }
         if (response.success) {
           messageActions = messageActions.filter(
             (a) => {
