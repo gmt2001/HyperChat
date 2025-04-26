@@ -11,6 +11,7 @@
   import PaidMessage from './PaidMessage.svelte';
   import MembershipItem from './MembershipItem.svelte';
   import ReportBanDialog from './ReportBanDialog.svelte';
+  import TimeoutDialog from './TimeoutDialog.svelte';
   import SuperchatViewDialog from './SuperchatViewDialog.svelte';
   import StickyBar from './StickyBar.svelte';
   import {
@@ -421,6 +422,7 @@
 </script>
 
 <ReportBanDialog />
+<TimeoutDialog />
 <SuperchatViewDialog />
 
 <svelte:window on:resize={() => {
