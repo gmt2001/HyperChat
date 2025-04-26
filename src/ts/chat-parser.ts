@@ -350,6 +350,7 @@ const parseTickerAction = (action: Ytc.AddTickerAction, isReplay: boolean, liveT
 };
 
 const parsePresenceCommand = (action: Ytc.LiveChatReportPresenceCommand): Ytc.Misc | undefined => {
+  console.log('presence', action.liveChatUserPresent);
   isModerator.set(action.liveChatUserPresent.isModerator);
   return { type: 'presence' } as const;
 };
