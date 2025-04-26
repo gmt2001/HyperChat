@@ -96,13 +96,13 @@
         }
 
         console.log({
-          condition: condition,
+          condition,
           isModerator: $isModerator,
-          isSelf: isSelf,
-          deleted: deleted,
+          isSelf,
+          deleted,
           isReplay: $isReplay,
-          banned: banned,
-          pass: pass
+          banned,
+          pass
         });
         if (pass) {
           hasOneCondition = true;
