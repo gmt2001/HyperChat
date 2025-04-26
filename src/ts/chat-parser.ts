@@ -349,10 +349,10 @@ const parseTickerAction = (action: Ytc.AddTickerAction, isReplay: boolean, liveT
   };
 };
 
-const parsePresenceCommand = (action: Ytc.LiveChatReportPresenceCommand): Ytc.Misc | undefined => {
-  console.log('presence', action.liveChatUserPresent);
+const parsePresenceCommand = (action: Ytc.LiveChatReportPresenceCommand): Ytc.ParsedPresence | undefined => {
+  console.log('presence', action);
   isModerator.set(action.liveChatUserPresent.isModerator);
-  return { type: 'presence' } as const;
+  return { type: 'presence', isModerator: action.liveChatUserPresent.isModerator } as ParsedPresence;
 };
 
 const processCommonAction = (

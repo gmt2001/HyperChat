@@ -76,6 +76,7 @@ declare namespace Chat {
   }
   interface Presence {
     type: 'presence';
+    isModerator: boolean;
   }
 
   interface chatUserActionResponse {
