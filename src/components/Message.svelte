@@ -93,6 +93,16 @@
         if (condition.isBanned !== undefined && condition.isBanned !== banned) {
           pass = false;
         }
+        
+        console.log({
+          condition: condition,
+          isModerator: $isModerator,
+          isSelf: isSelf,
+          deleted: deleted,
+          isReplay: $isReplay,
+          banned: banned,
+          pass: pass
+        });
         if (pass) {
           hasOneCondition = true;
         }

@@ -74,6 +74,9 @@ declare namespace Chat {
   interface Ping {
     type: 'ping';
   }
+  interface Presence {
+    type: 'presence';
+  }
 
   interface chatUserActionResponse {
     type: 'chatUserActionResponse';
@@ -83,7 +86,7 @@ declare namespace Chat {
   }
 
   type BackgroundResponse =
-    Actions | InitialData | ThemeUpdate | LtlMessageResponse |
+    Actions | InitialData | ThemeUpdate | LtlMessageResponse | Presence |
     registerClientResponse | executeChatActionMsg | chatUserActionResponse | Ping;
 
   type InterceptorSource = 'ytc' | 'ltlMessage';

@@ -48,7 +48,10 @@
     lastOpenedVersion,
     selfChannelName,
     enableHighlightedMentions,
-    ytDark
+    ytDark,
+
+    isModerator
+
   } from '../ts/storage';
   import type { Chat } from '../ts/typings/chat';
 
@@ -291,6 +294,9 @@
       case 'registerClientResponse':
         break;
       case 'ping':
+        break;
+      case 'presence':
+        console.log('isModerator=' + $isModerator)
         break;
       default:
         console.error('Unknown payload type', { port, response });
