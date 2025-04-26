@@ -6,6 +6,12 @@ on:
       version:
         required: true
         type: string
+      mode:
+        required: true
+        type: choice
+        options:
+          - build
+          - build-nomini
 
 jobs:
   build:
@@ -22,9 +28,10 @@ jobs:
       - run: |
           npm install
           npm run lint:check
-          npm run build
+          npm run $MODE
         env:
           VERSION: ${{ inputs.version }}
+          MODE: ${{ inputs.mode }}
 
       - name: Upload Chrome artifact
         uses: actions/upload-artifact@v4
