@@ -104,6 +104,7 @@
     return true;
   }).map((d) => ({
     icon: d.icon,
+    iconType: d.iconType,
     text: d.text,
     value: d.value.toString(),
     onClick: () => { useBanHammer(message, d.value, $port); }
