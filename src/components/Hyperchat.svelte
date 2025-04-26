@@ -242,6 +242,10 @@
           messageActions = [...messageActions, welcome];
         }
         break;
+      case 'presence':
+        isModerator.set(action.isModerator);
+        console.log('isModerator=' + $isModerator);
+        break;
     }
   };
 
@@ -294,10 +298,6 @@
       case 'registerClientResponse':
         break;
       case 'ping':
-        break;
-      case 'presence':
-        isModerator.set(response.isModerator);
-        console.log('isModerator=' + $isModerator);
         break;
       default:
         console.error('Unknown payload type', { port, response });
