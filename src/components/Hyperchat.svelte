@@ -244,7 +244,6 @@
         break;
       case 'presence':
         isModerator.set(action.isModerator);
-        console.log('isModerator=' + $isModerator);
         break;
     }
   };

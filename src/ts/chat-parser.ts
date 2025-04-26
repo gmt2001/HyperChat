@@ -5,8 +5,6 @@ import {
   isMembershipGiftPurchaseRenderer
 } from './chat-utils';
 
-import { isModerator } from './storage';
-
 const currentDomain = location.protocol.includes('youtube') ? (location.protocol + '//' + location.host) : 'https://www.youtube.com';
 
 // Source: https://stackoverflow.com/a/64396666
@@ -350,8 +348,6 @@ const parseTickerAction = (action: Ytc.AddTickerAction, isReplay: boolean, liveT
 };
 
 const parsePresenceCommand = (action: Ytc.LiveChatReportPresenceCommand): Ytc.ParsedPresence | undefined => {
-  console.log('presence', action);
-  isModerator.set(action.liveChatUserPresent.isModerator);
   return { type: 'presence', isModerator: action.liveChatUserPresent.isModerator } as ParsedPresence;
 };
 
