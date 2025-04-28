@@ -118,6 +118,7 @@ export const processSentMessage = (json: string): void => {
       }
     }
   };
+  console.log('processSentMessage', fakeChunk);
   interceptor.queue.addJsonToQueue(JSON.stringify(
     fakeChunk
   ), false, interceptor, true);
