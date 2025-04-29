@@ -296,13 +296,14 @@ const executeChatAction = async (
         menuItems[action].serviceEndpoint,
         'moderateLiveChatEndpoint'
       );
-      await fetcher(`${currentDomain}/youtubei/v1/live_chat/moderate?key=${apiKey}&prettyPrint=false`, {
+      const deleteBanResponse = await fetcher(`${currentDomain}/youtubei/v1/live_chat/moderate?key=${apiKey}&prettyPrint=false`, {
         ...heads,
         body: JSON.stringify({
           params,
           context
         })
       });
+      processSentMessage(deleteBanResponse);
     } else if (action === ChatUserActions.TIMEOUT) {
       if (timeoutOption === undefined) {
         return;
@@ -311,13 +312,14 @@ const executeChatAction = async (
         menuItems[action].serviceEndpoint.signalServiceEndpoint.actions[0].openPopupAction.popup.showActionDialogRenderer.body.showActionDialogContentRenderer.content.formRenderer.fields[0].optionsRenderer.items[timeoutOption].optionSelectableItemRenderer.submitEndpoint,
         'moderateLiveChatEndpoint'
       );
-      await fetcher(`${currentDomain}/youtubei/v1/live_chat/moderate?key=${apiKey}&prettyPrint=false`, {
+      const timeoutResponse = await fetcher(`${currentDomain}/youtubei/v1/live_chat/moderate?key=${apiKey}&prettyPrint=false`, {
         ...heads,
         body: JSON.stringify({
           params,
           context
         })
       });
+      processSentMessage(timeoutResponse);
     }
   } catch (e) {
     console.debug('Error executing chat action', e);
