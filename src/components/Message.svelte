@@ -25,7 +25,7 @@
   export let hideName = false;
   export let hideDropdown = false;
 
-  $: isDeleted = deleted !== null && deleted.replace !== null && deleted.replace.length > 0;
+  $: isDeleted = deleted !== undefined && deleted !== null;
 
   $: isSelf = message.author.id === $selfChannelId;
 
