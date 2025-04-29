@@ -116,7 +116,7 @@ export const processSentMessage = (json: string): void => {
       }
     }
   };
-  console.log('processSentMessage', fakeChunk);
+  console.debug('processSentMessage', fakeChunk);
   interceptor.queue.addJsonToQueue(JSON.stringify(
     fakeChunk
   ), false, interceptor, true);
@@ -303,7 +303,7 @@ const executeChatAction = async (
           context
         })
       });
-      processSentMessage(deleteBanResponse);
+      processSentMessage(JSON.stringify(deleteBanResponse));
     } else if (action === ChatUserActions.TIMEOUT) {
       if (timeoutOption === undefined) {
         return;
@@ -319,7 +319,7 @@ const executeChatAction = async (
           context
         })
       });
-      processSentMessage(timeoutResponse);
+      processSentMessage(JSON.stringify(timeoutResponse));
     }
   } catch (e) {
     console.debug('Error executing chat action', e);
