@@ -250,6 +250,7 @@ const parseAddChatItemAction = (action: Ytc.AddChatItemAction, isReplay = false,
 };
 
 const parseAuthorBonkedAction = (action: Ytc.AuthorBonkedAction): Ytc.ParsedBonk | undefined => {
+  console.log('parseAuthorBonkedAction', action, parseMessageRuns(action.deletedStateMessage.runs));
   return {
     replacedMessage: parseMessageRuns(action.deletedStateMessage.runs),
     authorId: action.externalChannelId
@@ -257,6 +258,7 @@ const parseAuthorBonkedAction = (action: Ytc.AuthorBonkedAction): Ytc.ParsedBonk
 };
 
 const parseMessageDeletedAction = (action: Ytc.MessageDeletedAction): Ytc.ParsedDeleted | undefined => {
+  console.log('parseMessageDeletedAction', action, parseMessageRuns(action.deletedStateMessage.runs));
   return {
     replacedMessage: parseMessageRuns(action.deletedStateMessage.runs),
     messageId: action.targetItemId
