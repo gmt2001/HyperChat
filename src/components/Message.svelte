@@ -25,6 +25,8 @@
   export let hideName = false;
   export let hideDropdown = false;
 
+  $: isDeleted = deleted !== null && deleted.replace !== null && deleted.replace.length > 0;
+
   $: isSelf = message.author.id === $selfChannelId;
 
   const nameClass = 'font-bold tracking-wide align-middle';
@@ -85,7 +87,7 @@
         if (condition.isSelf !== undefined && condition.isSelf !== isSelf) {
           pass = false;
         }
-        if (condition.isMessageRemoved !== undefined && ((condition.isMessageRemoved && deleted !== null) || (!condition.isMessageRemoved && deleted === null))) {
+        if (condition.isMessageRemoved !== undefined && condition.isMessageRemoved !== isDeleted) {
           pass = false;
         }
         if (condition.isReplay !== undefined && condition.isReplay !== $isReplay) {
