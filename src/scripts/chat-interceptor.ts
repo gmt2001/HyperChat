@@ -15,7 +15,7 @@ window.fetch = async (...args) => {
   const currentDomain = (location.protocol + '//' + location.host);
   const ytApi = (end: string): string => `${currentDomain}/youtubei/v1/live_chat${end}`;
   const isReceiving = url.startsWith(ytApi('/get_live_chat'));
-  const isSending = url.startsWith(ytApi('/send_message')) || url.startsWith(ytApi('/moderate'));
+  const isSending = url.startsWith(ytApi('/send_message'));
   const action = isReceiving ? 'messageReceive' : 'messageSent';
   if (isReceiving || isSending) {
     const response = JSON.stringify(await (result.clone()).json());
