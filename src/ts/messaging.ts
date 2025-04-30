@@ -29,10 +29,6 @@ const registerClient = (
   getInitialData = false
 ): void => {
   if (interceptor.clients.some((client) => client.name === port.name)) {
-    console.debug(
-      'Client already registered. Not registering',
-      { interceptor, port }
-    );
     port.postMessage(
       {
         type: 'registerClientResponse',
@@ -56,12 +52,10 @@ const registerClient = (
       return;
     }
     interceptor.clients.splice(i, 1);
-    console.debug('Unregister client successful', { port, interceptor });
   });
 
   // Add client to array
   interceptor.clients.push(port);
-  console.debug('Register client successful', { port, interceptor });
   port.postMessage(
     {
       type: 'registerClientResponse',
@@ -82,7 +76,6 @@ const registerClient = (
         : null
     };
     port.postMessage(payload);
-    console.debug('Sent initial data', { port, interceptor, payload });
   }
 };
 
@@ -94,7 +87,6 @@ export const processMessageChunk = (json: string): void => {
   if (!isYtcInterceptor(interceptor, true, 'processMessageChunk', json)) return;
 
   if (interceptor.clients.length < 1) {
-    console.debug('No clients', { interceptor, json });
     return;
   }
 
@@ -166,7 +158,6 @@ export const setTheme = (dark: boolean): void => {
   interceptor.clients.forEach(
     (port) => port.postMessage({ type: 'themeUpdate', dark })
   );
-  console.debug(`Set dark theme to ${dark.toString()}`);
 };
 
 /** Returns a message with the theme of the interceptor. */
