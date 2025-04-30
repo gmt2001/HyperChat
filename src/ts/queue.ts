@@ -156,7 +156,6 @@ export function ytcQueue(isReplay = false): YtcQueue {
   const onVideoProgress = (timeMs: number): void => {
     if (timeMs < 0) return;
     const diff = timeMs - previousTime;
-    // console.debug({ previousTime, timeMs, diff });
 
     if (isReplay && diff < -1) {
       console.log('Video scrubbed backwards, forcing chat clear');
@@ -254,17 +253,9 @@ export function ytcQueue(isReplay = false): YtcQueue {
   ): void => {
     const chunk = parseChatResponse(json, isReplay);
     if (!chunk) {
-      console.debug(
-        'Invalid json',
-        { interceptor, json, isReplay, isInitial }
-      );
       return;
     }
     addActionChunk(chunk, isInitial, forceDisplay);
-    console.debug(
-      isInitial ? 'Saved initial data' : 'Added chunk to queue',
-      { interceptor, chunk }
-    );
   };
 
   /**

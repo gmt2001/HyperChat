@@ -415,7 +415,6 @@ export const parseChatResponse = (response: string, isReplay: boolean): Ytc.Pars
     parsedResponse.contents?.liveChatRenderer;
   const actionsArray = base?.actions;
   if (!base || !actionsArray) {
-    console.debug('Invalid response:', parsedResponse);
     return;
   }
 
@@ -446,7 +445,6 @@ export const parseChatResponse = (response: string, isReplay: boolean): Ytc.Pars
     }
 
     if (!parsedAction) {
-      console.debug('Unparsed action:', action);
       return;
     }
     sortAction(parsedAction, messageArray, bonkArray, deleteArray, miscArray);

@@ -29,13 +29,6 @@
   const darkStore = dark();
   $: darkStore.set($isDark);
 
-  $: console.debug({
-    theme: $theme,
-    showProfileIcons: $showProfileIcons,
-    showTimestamps: $showTimestamps,
-    showUsernames: $showUsernames
-  });
-
   const superchatBarWasDisabled = !$enableStickySuperchatBar;
   let superchatBarWasToggled: boolean | null = null;
   const updateSuperchatBarToggle = () => {
