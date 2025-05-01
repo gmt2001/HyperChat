@@ -175,14 +175,16 @@
       </span>
       <span class="mr-1.5" class:hidden={!showUserMargin} />
     {/if}
-    <MessageRun
-      runs={message.message}
-      deletedRuns={message.deletedMessage}
-      {forceDark}
-      deleted={isDeleted}
-      {forceTLColor}
-      class={message.membershipGiftRedeem ? 'text-gray-700 dark:text-gray-600 italic font-medium' : ''}
-    />
+    {#key deleted}
+      <MessageRun
+        runs={message.message}
+        deletedRuns={message.deletedMessage}
+        {forceDark}
+        deleted={isDeleted}
+        {forceTLColor}
+        class={message.membershipGiftRedeem ? 'text-gray-700 dark:text-gray-600 italic font-medium' : ''}
+      />
+    {/key}
     {#if message.membershipGiftRedeem}
       <svg
         height="1em"
@@ -196,8 +198,10 @@
     {/if}
   </div>
   {#if !hideDropdown}
-    <Menu items={menuItems} visible={$hoveredItem === message.messageId} class="mr-2 ml-auto context-menu">
-      <Icon slot="activator" style="font-size: 1.5em;">more_vert</Icon>
-    </Menu>
+    {#key menuItems}
+      <Menu items={menuItems} visible={$hoveredItem === message.messageId} class="mr-2 ml-auto context-menu">
+        <Icon slot="activator" style="font-size: 1.5em;">more_vert</Icon>
+      </Menu>
+    {/key}
   {/if}
 </div>
