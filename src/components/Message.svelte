@@ -180,7 +180,7 @@
       runs={message.message}
       deletedRuns={message.deletedMessage}
       {forceDark}
-      deleted={deleted != null}
+      deleted={isDeleted}
       {forceTLColor}
       class={message.membershipGiftRedeem ? 'text-gray-700 dark:text-gray-600 italic font-medium' : ''}
     />
