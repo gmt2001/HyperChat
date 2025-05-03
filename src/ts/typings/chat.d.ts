@@ -82,9 +82,16 @@ declare namespace Chat {
     success: boolean;
   }
 
+  interface checkIsBannedResponse {
+    type: 'checkIsBannedResponse';
+    action: ChatUserActions;
+    message: Ytc.ParsedMessage;
+    isBanned: boolean;
+  }
+
   type BackgroundResponse =
     Actions | InitialData | ThemeUpdate | LtlMessageResponse |
-    registerClientResponse | executeChatActionMsg | chatUserActionResponse | Ping;
+    registerClientResponse | executeChatActionMsg | chatUserActionResponse | checkIsBannedResponse | Ping;
 
   type InterceptorSource = 'ytc' | 'ltlMessage';
 

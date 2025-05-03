@@ -110,7 +110,7 @@ export const processSentMessage = (json: string): void => {
       }
     }
   };
-  console.debug('processSentMessage', fakeChunk);
+  
   interceptor.queue.addJsonToQueue(JSON.stringify(
     fakeChunk
   ), false, interceptor, true);
@@ -282,7 +282,16 @@ const executeChatAction = async (
       menuItems[icon] = renderer;
     }
 
-    if (action === ChatUserActions.BLOCK) {
+    if (action === ChatUserActions.CHECK_BANNED) {
+      interceptor.clients.forEach(
+        (clientPort) => clientPort.postMessage({
+          type: 'checkIsBannedResponse',
+          action: action,
+          message,
+          isBanned: ChatUserActions.UNBAN in menuItems
+        })
+      );
+    } else if (action === ChatUserActions.BLOCK) {
       const { params, context } = parseServiceEndpoint(
         menuItems[ChatUserActions.BLOCK].navigationEndpoint.confirmDialogEndpoint
           .content.confirmDialogRenderer.confirmButton.buttonRenderer.serviceEndpoint,

@@ -32,6 +32,7 @@ export enum ChatUserActions {
   TIMEOUT = 'HOURGLASS',
   BAN = 'REMOVE_CIRCLE',
   UNBAN = 'ADD_CIRCLE',
+  CHECK_BANNED = 'CHECK_BANNED'
 }
 
 export enum ChatReportUserOptions {
