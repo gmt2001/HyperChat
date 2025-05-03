@@ -16,6 +16,7 @@
   import SuperchatViewDialog from './SuperchatViewDialog.svelte';
   import StickyBar from './StickyBar.svelte';
   import {
+    ChatUserActions,
     Theme,
     YoutubeEmojiRenderMode,
     chatUserActionsItems
@@ -53,6 +54,7 @@
     isModerator
   } from '../ts/storage';
   import type { Chat } from '../ts/typings/chat';
+  import { useBanHammer } from 'ts/chat-actions';
 
   const welcome = { welcome: true, message: { messageId: 'welcome' } };
   type Welcome = typeof welcome;
@@ -158,6 +160,17 @@
         action.deleted = { replace: bonk.replacedMessage };
       }
     });
+
+    const aMessage: Chat.MessageAction = messageActions.find((action) => {
+      if (isWelcome(action)) return false;
+      if (action.message.author.id === bonk.authorId) {
+        return true;
+      }
+      return false;
+    });
+    if (aMessage !== undefined) {
+      useBanHammer(aMessage.message, ChatUserActions.CHECK_BANNED, $port);
+    }
 
     messageActions = messageActions;
   };
@@ -276,6 +289,16 @@
         break;
       case 'themeUpdate':
         $ytDark = response.dark;
+        break;
+      case 'checkIsBannedResponse':
+        messageActions.forEach((action) => {
+          if (isWelcome(action)) return;
+          if (action.message.author.id === response.message.author.id) {
+            action.message.isBanned = response.isBanned;
+          }
+        });
+
+        messageActions = messageActions;
         break;
       case 'chatUserActionResponse':
         $alertDialog = {

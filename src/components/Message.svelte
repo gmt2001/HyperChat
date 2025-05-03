@@ -20,7 +20,6 @@
 
   export let message: Ytc.ParsedMessage;
   export let deleted: Chat.MessageDeletedObj | null = null;
-  export let banned = false;
   export let forceDark = false;
   export let hideName = false;
   export let hideDropdown = false;
@@ -92,7 +91,7 @@
         if (condition.isReplay !== undefined && condition.isReplay !== $isReplay) {
           pass = false;
         }
-        if (condition.isBanned !== undefined && condition.isBanned !== banned) {
+        if (condition.isBanned !== undefined && message.isBanned !== undefined && condition.isBanned !== message.isBanned) {
           pass = false;
         }
         if (pass) {
