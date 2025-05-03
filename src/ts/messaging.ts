@@ -195,6 +195,7 @@ const executeChatAction = async (
   };
 
   let success = true;
+  let showResult = false;
   try {
     const apiKey = ytcfg.data_.INNERTUBE_API_KEY;
     const contextMenuUrl = `${currentDomain}/youtubei/v1/live_chat/get_item_context_menu?params=` +
@@ -251,6 +252,7 @@ const executeChatAction = async (
         })
       );
     } else if (action === ChatUserActions.BLOCK) {
+      showResult = true;
       const { params, context } = parseServiceEndpoint(
         menuItems[ChatUserActions.BLOCK].navigationEndpoint.confirmDialogEndpoint
           .content.confirmDialogRenderer.confirmButton.buttonRenderer.serviceEndpoint,
@@ -264,6 +266,7 @@ const executeChatAction = async (
         })
       });
     } else if (action === ChatUserActions.REPORT_USER) {
+      showResult = true;
       const { params, context } = parseServiceEndpoint(
         menuItems[ChatUserActions.REPORT_USER].serviceEndpoint,
         'getReportFormEndpoint'
@@ -325,14 +328,16 @@ const executeChatAction = async (
     success = false;
   }
 
-  interceptor.clients.forEach(
-    (clientPort) => clientPort.postMessage({
-      type: 'chatUserActionResponse',
-      action: action,
-      message,
-      success
-    })
-  );
+  if (showResult) {
+    interceptor.clients.forEach(
+      (clientPort) => clientPort.postMessage({
+        type: 'chatUserActionResponse',
+        action: action,
+        message,
+        success
+      })
+    );
+  }
 };
 
 export const initInterceptor = (
