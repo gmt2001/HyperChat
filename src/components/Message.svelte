@@ -117,7 +117,7 @@
 <div
   class="inline-flex flex-row gap-2 break-words w-full overflow-visible"
 >
-  {#if !hideName && $showProfileIcons}
+  {#if !hideName && $showProfileIcons && message.author.profileIcon.src != null}
     <a
       href={message.author.url}
       class="flex-shrink-0 {message.author.url ? 'cursor-pointer' : 'cursor-auto'}"
