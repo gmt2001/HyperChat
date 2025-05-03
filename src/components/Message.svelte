@@ -29,10 +29,6 @@
 
   $: isSelf = message.author.id === $selfChannelId;
 
-  export function invalidate() {
-    isDeleted = isDeleted;
-  }
-
   const nameClass = 'font-bold tracking-wide align-middle';
   const generateNameColorClass = (member: boolean, moderator: boolean, owner: boolean, forceDark: boolean) => {
     if (owner && forceDark) {
