@@ -53,7 +53,7 @@
     isModerator
   } from '../ts/storage';
   import type { Chat } from '../ts/typings/chat';
-  import { useBanHammer } from 'ts/chat-actions';
+  import { useBanHammer } from '../ts/chat-actions';
 
   const welcome = { welcome: true, message: { messageId: 'welcome' } };
   type Welcome = typeof welcome;
