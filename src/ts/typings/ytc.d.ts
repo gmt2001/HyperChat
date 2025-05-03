@@ -224,6 +224,10 @@ declare namespace Ytc {
     };
   }
 
+  interface ModerationMessageRenderer extends IRenderer {
+    message?: RunsObj;
+  }
+
   interface IPaidRenderer extends TextMessageRenderer {
     purchaseAmountText: SimpleTextObj;
     authorNameTextColor: number;
@@ -369,6 +373,7 @@ declare namespace Ytc {
     liveChatViewerEngagementMessageRenderer?: EngagementMessageRenderer;
     /** ??? */
     liveChatPlaceholderItemRenderer?: PlaceholderRenderer;
+    liveChatModerationMessageRenderer?: ModerationMessageRenderer
   }
 
   interface TickerRenderer { // Doesn't have a timestamp but ID is always a paid message id
