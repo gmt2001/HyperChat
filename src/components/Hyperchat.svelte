@@ -406,7 +406,7 @@
   $: $enableStickySuperchatBar, hasBanner, topBarResized();
 
   const isMention = (msg: Ytc.ParsedMessage) => {
-    return $selfChannelName && msg.message.map(run => {
+    return $selfChannelName && msg.message?.map(run => {
       if (run.type === 'text' || run.type === 'link') {
         return run.text;
       } else {
