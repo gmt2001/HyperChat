@@ -197,7 +197,8 @@ const parseAddChatItemAction = (action: Ytc.AddChatItemAction, isReplay = false,
     timestamp: isReplay && timestampText != null ? timestampText : formatTimestamp(timestampUsec),
     showtime: isReplay ? liveTimeoutOrReplayMs : liveShowtimeMs,
     messageId: renderer.id,
-    params: messageRenderer.contextMenuEndpoint?.liveChatItemContextMenuEndpoint.params
+    params: messageRenderer.contextMenuEndpoint?.liveChatItemContextMenuEndpoint.params,
+    isModerationMessage: actionItem.liveChatModerationMessageRenderer != null
   };
   if (channelId != null) {
     item.author.url = `${currentDomain}/channel/${channelId}`;

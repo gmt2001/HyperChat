@@ -25,7 +25,7 @@
   export let hideName = false;
   export let hideDropdown = false;
 
-  $: isDeleted = deleted != null || (message.message == null && message.deletedMessage != null);
+  $: isDeleted = deleted != null || message.isModerationMessage;
 
   $: isSelf = message.author.id === $selfChannelId;
 
@@ -117,7 +117,7 @@
 <div
   class="inline-flex flex-row gap-2 break-words w-full overflow-visible"
 >
-  {#if !hideName && $showProfileIcons && message.author.profileIcon.src !== ''}
+  {#if !hideName && $showProfileIcons && !message.isModerationMessage}
     <a
       href={message.author.url}
       class="flex-shrink-0 {message.author.url ? 'cursor-pointer' : 'cursor-auto'}"
@@ -194,7 +194,7 @@
       </svg>
     {/if}
   </div>
-  {#if !hideDropdown}
+  {#if !hideDropdown && !message.isModerationMessage}
     <Menu items={menuItems} visible={$hoveredItem === message.messageId} class="mr-2 ml-auto context-menu">
       <Icon slot="activator" style="font-size: 1.5em;">more_vert</Icon>
     </Menu>

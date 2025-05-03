@@ -477,6 +477,7 @@ declare namespace Ytc {
     params?: string;
     membershipGiftPurchase?: ParsedMembershipGiftPurchase;
     membershipGiftRedeem?: boolean;
+    isModerationMessage?: boolean;
   }
 
   interface ParsedBonk {
