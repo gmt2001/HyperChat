@@ -26,7 +26,7 @@
 
   $: isDeleted = deleted != null || message.isModerationMessage;
 
-  $: isBanned = message.isBanned !== undefined ? message.isBanned : false;
+  $: isBanned = message.isBanned ?? false;
 
   $: isSelf = message.author.id === $selfChannelId;
 
