@@ -44,7 +44,13 @@
     {#each runs as run}
       {#if run.type === 'text'}
         {#if deleted && !deletedRuns?.length}
-          <span>{run.text}</span>
+          {#if run.styles?.includes('bold')}
+            <strong>
+              <span>{run.text}</span>
+            </strong>
+          {:else}
+            <span>{run.text}</span>
+          {/if}
         {:else}
           {#if run.styles?.includes('bold')}
             <strong>
@@ -91,7 +97,13 @@
   >
     {#each deletedRuns as run}
       {#if run.type === 'text'}
-        <span>{run.text}</span>
+        {#if run.styles?.includes('bold')}
+          <strong>
+            <span>{run.text}</span>
+          </strong>
+        {:else}
+          <span>{run.text}</span>
+        {/if}
       {:else if run.type === 'link'}
         <a
           class="inline underline align-middle"
