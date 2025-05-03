@@ -158,6 +158,8 @@
         action.deleted = { replace: bonk.replacedMessage };
       }
     });
+
+    messageActions = messageActions;
   };
 
   const filterTickers = (items: Chat.MessageAction[]): Chat.MessageAction[] => {
@@ -183,13 +185,13 @@
     messageActions.some((action) => {
       if (isWelcome(action)) return false;
       if (action.message.messageId === deletion.messageId) {
-        console.log('Trigger delete', action, deletion);
         action.deleted = { replace: deletion.replacedMessage };
-        action.invalidate();
         return true;
       }
       return false;
     });
+
+    messageActions = messageActions;
   };
 
   const onChatAction = (action: Chat.Actions, isInitial = false) => {
