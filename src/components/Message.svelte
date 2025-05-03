@@ -29,6 +29,10 @@
 
   $: isSelf = message.author.id === $selfChannelId;
 
+  export function invalidate() {
+    isDeleted = isDeleted;
+  }
+
   const nameClass = 'font-bold tracking-wide align-middle';
   const generateNameColorClass = (member: boolean, moderator: boolean, owner: boolean, forceDark: boolean) => {
     if (owner && forceDark) {
@@ -175,16 +179,14 @@
       </span>
       <span class="mr-1.5" class:hidden={!showUserMargin} />
     {/if}
-    {#key deleted}
-      <MessageRun
-        runs={message.message}
-        deletedRuns={message.deletedMessage}
-        {forceDark}
-        deleted={isDeleted}
-        {forceTLColor}
-        class={message.membershipGiftRedeem ? 'text-gray-700 dark:text-gray-600 italic font-medium' : ''}
-      />
-    {/key}
+    <MessageRun
+      runs={message.message}
+      deletedRuns={message.deletedMessage}
+      {forceDark}
+      deleted={isDeleted}
+      {forceTLColor}
+      class={message.membershipGiftRedeem ? 'text-gray-700 dark:text-gray-600 italic font-medium' : ''}
+    />
     {#if message.membershipGiftRedeem}
       <svg
         height="1em"
@@ -198,10 +200,8 @@
     {/if}
   </div>
   {#if !hideDropdown}
-    {#key menuItems}
-      <Menu items={menuItems} visible={$hoveredItem === message.messageId} class="mr-2 ml-auto context-menu">
-        <Icon slot="activator" style="font-size: 1.5em;">more_vert</Icon>
-      </Menu>
-    {/key}
+    <Menu items={menuItems} visible={$hoveredItem === message.messageId} class="mr-2 ml-auto context-menu">
+      <Icon slot="activator" style="font-size: 1.5em;">more_vert</Icon>
+    </Menu>
   {/if}
 </div>

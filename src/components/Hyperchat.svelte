@@ -183,7 +183,9 @@
     messageActions.some((action) => {
       if (isWelcome(action)) return false;
       if (action.message.messageId === deletion.messageId) {
+        console.log('Trigger delete', action, deletion);
         action.deleted = { replace: deletion.replacedMessage };
+        action.invalidate();
         return true;
       }
       return false;
