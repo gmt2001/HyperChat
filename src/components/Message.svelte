@@ -25,7 +25,7 @@
   export let hideName = false;
   export let hideDropdown = false;
 
-  $: isDeleted = deleted !== undefined && deleted !== null;
+  $: isDeleted = deleted != null || (message.message == null && message.deletedMessage != null);
 
   $: isSelf = message.author.id === $selfChannelId;
 
@@ -68,7 +68,6 @@
     } else {
       message.message = deleted.replace;
     }
-    console.log('deleted', message, deleted);
   }
 
   $: showUserMargin = $showProfileIcons || $showUsernames || $showTimestamps ||
