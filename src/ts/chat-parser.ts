@@ -144,7 +144,8 @@ const parseAddChatItemAction = (action: Ytc.AddChatItemAction, isReplay = false,
     actionItem.liveChatPaidStickerRenderer ??
     actionItem.liveChatMembershipItemRenderer ??
     actionItem.liveChatSponsorshipsGiftPurchaseAnnouncementRenderer ??
-    actionItem.liveChatSponsorshipsGiftRedemptionAnnouncementRenderer;
+    actionItem.liveChatSponsorshipsGiftRedemptionAnnouncementRenderer ??
+    actionItem.liveChatModerationMessageRenderer;
   if (!renderer) {
     return;
   }
@@ -171,7 +172,8 @@ const parseAddChatItemAction = (action: Ytc.AddChatItemAction, isReplay = false,
       }
     });
   }
-  const runs = parseMessageRuns(messageRenderer.message?.runs);
+  const runs = actionItem.liveChatModerationMessageRenderer != null ? null : parseMessageRuns(messageRenderer.message?.runs);
+  const deletedRuns = actionItem.liveChatModerationMessageRenderer != null ? parseMessageRuns(messageRenderer.message?.runs) : null;
   const timestampUsec = parseInt(renderer.timestampUsec || (Date.now() * 1000).toString());
   const timestampText = messageRenderer.timestampText?.simpleText;
   const liveShowtimeMs = (timestampUsec / 1000) + liveTimeoutOrReplayMs;
@@ -191,6 +193,7 @@ const parseAddChatItemAction = (action: Ytc.AddChatItemAction, isReplay = false,
       profileIcon
     },
     message: runs,
+    deletedMessage: deletedRuns,
     timestamp: isReplay && timestampText != null ? timestampText : formatTimestamp(timestampUsec),
     showtime: isReplay ? liveTimeoutOrReplayMs : liveShowtimeMs,
     messageId: renderer.id,
