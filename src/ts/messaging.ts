@@ -240,7 +240,6 @@ const executeChatAction = async (
       const icon= renderer.icon.iconType;
       menuItems[icon] = renderer;
     }
-    console.log('executeChatAction', action, menuItems, res);
 
     if (action === ChatUserActions.BLOCK) {
       const { params, context } = parseServiceEndpoint(
