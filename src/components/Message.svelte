@@ -26,6 +26,8 @@
 
   $: isDeleted = deleted != null || message.isModerationMessage;
 
+  $: isBanned = message.isBanned !== undefined ? message.isBanned : false;
+
   $: isSelf = message.author.id === $selfChannelId;
 
   const nameClass = 'font-bold tracking-wide align-middle';
@@ -91,7 +93,7 @@
         if (condition.isReplay !== undefined && condition.isReplay !== $isReplay) {
           pass = false;
         }
-        if (condition.isBanned !== undefined && message.isBanned !== undefined && condition.isBanned !== message.isBanned) {
+        if (condition.isBanned !== undefined && condition.isBanned !== isBanned) {
           pass = false;
         }
         if (pass) {
