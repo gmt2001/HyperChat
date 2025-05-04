@@ -164,7 +164,7 @@
     if (aMessage !== undefined) {
       useBanHammer(aMessage.message, ChatUserActions.CHECK_BANNED, $port);
     } else if (isInitial) {
-      setTimeout(function() {
+      setTimeout(function () {
         checkIsBanned(bonk);
       }, 1000);
     }
