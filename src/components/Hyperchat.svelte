@@ -176,6 +176,7 @@
   }
 
   const checkIsBanned = (bonk: Ytc.ParsedBonk, isInitial: boolean = false) => {
+    console.log('checkIsBanned', bonk, isInitial);
     const aMessage: Chat.MessageAction = messageActions.find((action) => {
       if (isWelcome(action)) return false;
       if (action.message.author.id === bonk.authorId) {
