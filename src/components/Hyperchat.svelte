@@ -152,26 +152,8 @@
     piledMessages = [];
   }
 
-  const checkIsBanned = (bonk: Ytc.ParsedBonk, isInitial: boolean = false) => {
-    const aMessage: Chat.MessageAction = messageActions.find((action) => {
-      if (isWelcome(action)) return false;
-      if (action.message.author.id === bonk.authorId) {
-        return true;
-      }
-      return false;
-    });
-    console.log('checkIsBanned', bonk, isInitial, aMessage);
 
-    if (aMessage !== undefined) {
-      useBanHammer(aMessage.message, ChatUserActions.CHECK_BANNED, $port);
-    } else if (isInitial) {
-      setTimeout(function () {
-        checkIsBanned(bonk);
-      }, 1000);
-    }
-  };
-
-  const onBonk = (bonk: Ytc.ParsedBonk, isInitial: boolean = false) => {
+  const onBonk = (bonk: Ytc.ParsedBonk) => {
     messageActions.forEach((action) => {
       if (isWelcome(action)) return;
       if (action.message.author.id === bonk.authorId) {
@@ -179,7 +161,16 @@
       }
     });
 
-    checkIsBanned(bonk, isInitial);
+    const aMessage: Chat.MessageAction = messageActions.find((action) => {
+      if (isWelcome(action)) return false;
+      if (action.message.author.id === bonk.authorId) {
+        return true;
+      }
+      return false;
+    });
+    if (aMessage !== undefined) {
+      useBanHammer(aMessage.message, ChatUserActions.CHECK_BANNED, $port);
+    }
 
     messageActions = messageActions;
   };
@@ -222,7 +213,7 @@
         newMessages(action, isInitial);
         break;
       case 'bonk':
-        onBonk(action.bonk, isInitial);
+        onBonk(action.bonk);
         break;
       case 'delete':
         onDelete(action.deletion);
