@@ -39,18 +39,31 @@ declare namespace Ytc {
     };
     addLiveChatTickerItemAction?: AddTickerAction;
     updateLiveChatPollAction?: UpdatePollAction;
+    markChatItemsByAuthorAsDeletedAction?: AuthorBonkedAction;
   }
 
   /** Expected YTC action object */
   interface Action extends ReplayAction {
     replayChatItemAction?: ReplayChatItemAction;
-    markChatItemsByAuthorAsDeletedAction?: AuthorBonkedAction;
     markChatItemAsDeletedAction?: MessageDeletedAction;
+    liveChatReportPresenceCommand?: LiveChatReportPresenceCommand;
   }
 
   /*
    * Actions
    */
+
+ interface LiveChatReportPresenceCommand {
+    liveChatUserPresent: LiveChatUserPresent;
+    presentAtMs: IntString;
+ }
+
+ interface LiveChatUserPresent {
+    externalVideoId: string;
+    isModerator: boolean;
+    externalChannelId: string;
+ }
+
   /** YTC addChatItemAction object */
   interface AddChatItemAction {
     item: AddChatItem;
@@ -211,6 +224,10 @@ declare namespace Ytc {
     };
   }
 
+  interface ModerationMessageRenderer extends IRenderer {
+    message?: RunsObj;
+  }
+
   interface IPaidRenderer extends TextMessageRenderer {
     purchaseAmountText: SimpleTextObj;
     authorNameTextColor: number;
@@ -356,6 +373,7 @@ declare namespace Ytc {
     liveChatViewerEngagementMessageRenderer?: EngagementMessageRenderer;
     /** ??? */
     liveChatPlaceholderItemRenderer?: PlaceholderRenderer;
+    liveChatModerationMessageRenderer?: ModerationMessageRenderer
   }
 
   interface TickerRenderer { // Doesn't have a timestamp but ID is always a paid message id
@@ -449,6 +467,7 @@ declare namespace Ytc {
       url?: string;
     };
     message: ParsedRun[];
+    deletedMessage: ParsedRun[];
     timestamp: string;
     showtime: number;
     messageId: string;
@@ -458,6 +477,8 @@ declare namespace Ytc {
     params?: string;
     membershipGiftPurchase?: ParsedMembershipGiftPurchase;
     membershipGiftRedeem?: boolean;
+    isModerationMessage?: boolean;
+    isBanned?: boolean;
   }
 
   interface ParsedBonk {
@@ -533,11 +554,16 @@ declare namespace Ytc {
     detailText?: string;
   }
 
-  type ParsedMisc = ParsedPinned | ParsedSummary | ParsedRedirect | ParsedPoll | ParsedRemoveBanner;
+  interface ParsedPresence {
+    type: 'presence';
+    isModerator: boolean;
+  }
+
+  type ParsedMisc = ParsedPinned | ParsedBonk | ParsedSummary | ParsedRedirect | ParsedPoll | ParsedRemoveBanner | ParsedPresence;
 
   type ParsedTimedItem = ParsedMessage | ParsedTicker;
 
-  type ParsedAction = ParsedTimedItem | ParsedBonk | ParsedDeleted | ParsedMisc;
+  type ParsedAction = ParsedTimedItem | ParsedDeleted | ParsedMisc;
 
   interface ParsedChunk {
     messages: ParsedMessage[];

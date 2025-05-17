@@ -3,7 +3,7 @@ import { derived, readable, writable } from 'svelte/store';
 import type { Writable } from 'svelte/store';
 import { getClient, AvailableLanguages } from 'iframe-translator';
 import type { IframeTranslatorClient, AvailableLanguageCodes } from 'iframe-translator';
-import { ChatReportUserOptions, Theme, YoutubeEmojiRenderMode } from './chat-constants';
+import { ChatReportUserOptions, ChatTimeoutOptions, Theme, YoutubeEmojiRenderMode } from './chat-constants';
 
 export const stores = webExtStores();
 
@@ -70,6 +70,10 @@ export const alertDialog = writable(null as null | {
   message: string;
   color: string;
 });
+export const timeoutDialog = writable(null as null | {
+  callback: (selection: ChatTimeoutOptions) => void;
+  optionStore: Writable<null | ChatTimeoutOptions>;
+});
 export const stickySuperchats = writable([] as Ytc.ParsedTicker[]);
 export const isDark = derived(theme, ($theme) => {
   return $theme === Theme.DARK || (
@@ -77,6 +81,8 @@ export const isDark = derived(theme, ($theme) => {
   );
 });
 export const ytDark = writable(false);
+export const isModerator = writable(false);
+export const isReplay = writable(false);
 export const currentProgress = writable(null as null | number);
 export const enableStickySuperchatBar = stores.addSyncStore('hc.enableStickySuperchatBar', true);
 export const enableHighlightedMentions = stores.addSyncStore('hc.enableHighlightedMentions', true);

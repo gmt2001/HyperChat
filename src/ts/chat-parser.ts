@@ -66,7 +66,7 @@ const parseMessageRuns = (runs?: Ytc.MessageRun[]): Ytc.ParsedRun[] => {
 // takes an array of runs, finds newline-only runs, and splits the array by them, up to maxSplit times
 // final output will have maximum length of maxSplit + 1
 // maxSplit = -1 will have no limit for splits
-const splitRunsByNewline = (runs: Ytc.ParsedRun[], maxSplit: number = -1): Ytc.ParsedRun[][] => 
+const splitRunsByNewline = (runs: Ytc.ParsedRun[], maxSplit: number = -1): Ytc.ParsedRun[][] =>
   runs.reduce((acc: Ytc.ParsedRun[][], run: Ytc.ParsedRun) => {
     if (run.type === 'text' && run.text === '\n' && (maxSplit == -1 || acc.length <= maxSplit)) {
       acc.push([]);
@@ -117,9 +117,9 @@ const parseRedirectBanner = (renderer: Ytc.AddChatItem, actionId: string, showti
     src: fixUrl(baseRenderer.authorPhoto?.thumbnails[0].url ?? ''),
     alt: 'Redirect profile icon'
   };
-  const url = baseRenderer.inlineActionButton?.buttonRenderer.command.urlEndpoint?.url || 
+  const url = baseRenderer.inlineActionButton?.buttonRenderer.command.urlEndpoint?.url ||
     (baseRenderer.inlineActionButton?.buttonRenderer.command.watchEndpoint?.videoId ?
-       "/watch?v=" + baseRenderer.inlineActionButton?.buttonRenderer.command.watchEndpoint?.videoId 
+       "/watch?v=" + baseRenderer.inlineActionButton?.buttonRenderer.command.watchEndpoint?.videoId
        : '');
   const item: Ytc.ParsedRedirect = {
     type: 'redirect',
@@ -144,7 +144,8 @@ const parseAddChatItemAction = (action: Ytc.AddChatItemAction, isReplay = false,
     actionItem.liveChatPaidStickerRenderer ??
     actionItem.liveChatMembershipItemRenderer ??
     actionItem.liveChatSponsorshipsGiftPurchaseAnnouncementRenderer ??
-    actionItem.liveChatSponsorshipsGiftRedemptionAnnouncementRenderer;
+    actionItem.liveChatSponsorshipsGiftRedemptionAnnouncementRenderer ??
+    actionItem.liveChatModerationMessageRenderer;
   if (!renderer) {
     return;
   }
@@ -171,7 +172,8 @@ const parseAddChatItemAction = (action: Ytc.AddChatItemAction, isReplay = false,
       }
     });
   }
-  const runs = parseMessageRuns(messageRenderer.message?.runs);
+  const runs = actionItem.liveChatModerationMessageRenderer != null ? null : parseMessageRuns(messageRenderer.message?.runs);
+  const deletedRuns = actionItem.liveChatModerationMessageRenderer != null ? parseMessageRuns(messageRenderer.message?.runs) : null;
   const timestampUsec = parseInt(renderer.timestampUsec || (Date.now() * 1000).toString());
   const timestampText = messageRenderer.timestampText?.simpleText;
   const liveShowtimeMs = (timestampUsec / 1000) + liveTimeoutOrReplayMs;
@@ -191,10 +193,12 @@ const parseAddChatItemAction = (action: Ytc.AddChatItemAction, isReplay = false,
       profileIcon
     },
     message: runs,
+    deletedMessage: deletedRuns,
     timestamp: isReplay && timestampText != null ? timestampText : formatTimestamp(timestampUsec),
     showtime: isReplay ? liveTimeoutOrReplayMs : liveShowtimeMs,
     messageId: renderer.id,
-    params: messageRenderer.contextMenuEndpoint?.liveChatItemContextMenuEndpoint.params
+    params: messageRenderer.contextMenuEndpoint?.liveChatItemContextMenuEndpoint.params,
+    isModerationMessage: actionItem.liveChatModerationMessageRenderer != null
   };
   if (channelId != null) {
     item.author.url = `${currentDomain}/channel/${channelId}`;
@@ -347,6 +351,10 @@ const parseTickerAction = (action: Ytc.AddTickerAction, isReplay: boolean, liveT
   };
 };
 
+const parsePresenceCommand = (action: Ytc.LiveChatReportPresenceCommand): Ytc.ParsedPresence | undefined => {
+  return { type: 'presence', isModerator: action.liveChatUserPresent.isModerator } as ParsedPresence;
+};
+
 const processCommonAction = (
   action: Ytc.ReplayAction,
   isReplay: boolean,
@@ -365,6 +373,8 @@ const processCommonAction = (
     return parseTickerAction(action.addLiveChatTickerItemAction, isReplay, liveTimeoutOrReplayMs);
   } else if (action.updateLiveChatPollAction) {
     return parsePollRenderer(action.updateLiveChatPollAction.pollToUpdate.pollRenderer);
+  } else if (action.markChatItemsByAuthorAsDeletedAction) {
+    return parseAuthorBonkedAction(action.markChatItemsByAuthorAsDeletedAction);
   }
 };
 
@@ -372,10 +382,10 @@ const processLiveAction = (action: Ytc.Action, isReplay: boolean, liveTimeoutMs:
   const common = processCommonAction(action, isReplay, liveTimeoutMs);
   if (common) {
     return common;
-  } else if (action.markChatItemsByAuthorAsDeletedAction) {
-    return parseAuthorBonkedAction(action.markChatItemsByAuthorAsDeletedAction);
   } else if (action.markChatItemAsDeletedAction) {
     return parseMessageDeletedAction(action.markChatItemAsDeletedAction);
+  } else if (action.liveChatReportPresenceCommand) {
+    return parsePresenceCommand(action.liveChatReportPresenceCommand);
   }
 };
 

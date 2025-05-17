@@ -7,6 +7,7 @@
   } from '../ts/storage';
 
   export let runs: Ytc.ParsedRun[] | null;
+  export let deletedRuns: Ytc.ParsedRun[] | null;
   export let forceDark = false;
   export let deleted = false;
   export let forceTLColor: Theme = Theme.YOUTUBE;
@@ -41,8 +42,14 @@
   >
     {#each runs as run}
       {#if run.type === 'text'}
-        {#if deleted}
-          <span>{run.text}</span>
+        {#if deleted && !deletedRuns?.length}
+          {#if run.styles?.includes('bold')}
+            <strong>
+              <span>{run.text}</span>
+            </strong>
+          {:else}
+            <span>{run.text}</span>
+          {/if}
         {:else}
           {#if run.styles?.includes('bold')}
             <strong>
@@ -51,6 +58,50 @@
           {:else}
             <TranslatedMessage text={run.text} {forceTLColor} />
           {/if}
+        {/if}
+      {:else if run.type === 'link'}
+        <a
+          class="inline underline align-middle"
+          href={run.url}
+          target="_blank"
+        >
+          {run.text}
+        </a>
+      {:else if run.type === 'emoji' && $emojiRenderMode !== YoutubeEmojiRenderMode.HIDE_ALL}
+        {#if run.standardEmoji && $useSystemEmojis}
+          <span
+            class="cursor-auto align-middle text-base"
+          >
+            {run.alt}
+          </span>
+        {:else if run.src}
+          <img
+            class="h-5 w-5 inline mx-0.5 align-middle"
+            src={run.src}
+            alt={run.alt}
+            title={run.alt}
+          />
+        {/if}
+      {/if}
+    {/each}
+  </span>
+{/if}
+{#if deletedRuns?.length}
+  {#if runs?.length}
+    <br/>
+  {/if}
+  <span
+    class="cursor-auto align-middle {deletedClass} {$$props.class ?? ''}"
+    style="word-break: break-word"
+  >
+    {#each deletedRuns as run}
+      {#if run.type === 'text'}
+        {#if run.styles?.includes('bold')}
+          <strong>
+            <span>{run.text}</span>
+          </strong>
+        {:else}
+          <span>{run.text}</span>
         {/if}
       {:else if run.type === 'link'}
         <a

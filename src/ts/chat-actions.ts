@@ -1,19 +1,13 @@
 import { writable } from 'svelte/store';
-import { ChatReportUserOptions, ChatUserActions } from './chat-constants';
-import { reportDialog } from './storage';
+import { ChatReportUserOptions, ChatTimeoutOptions, ChatUserActions } from './chat-constants';
+import { reportDialog, timeoutDialog } from './storage';
 
 export function useBanHammer(
   message: Ytc.ParsedMessage,
   action: ChatUserActions,
   port: Chat.Port | null
 ): void {
-  if (action === ChatUserActions.BLOCK) {
-    port?.postMessage({
-      type: 'executeChatAction',
-      message,
-      action
-    });
-  } else if (action === ChatUserActions.REPORT_USER) {
+  if (action === ChatUserActions.REPORT_USER) {
     const store = writable(null as null | ChatReportUserOptions);
     reportDialog.set({
       callback: (selection) => {
@@ -25,6 +19,25 @@ export function useBanHammer(
         });
       },
       optionStore: store
+    });
+  } else if (action === ChatUserActions.TIMEOUT) {
+    const store = writable(null as null | ChatTimeoutOptions);
+    timeoutDialog.set({
+      callback: (selection) => {
+        port?.postMessage({
+          type: 'executeChatAction',
+          message,
+          action,
+          timeoutOption: selection
+        });
+      },
+      optionStore: store
+    });
+  } else {
+    port?.postMessage({
+      type: 'executeChatAction',
+      message,
+      action
     });
   }
 }
