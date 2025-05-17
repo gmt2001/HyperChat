@@ -194,7 +194,7 @@
       </svg>
     {/if}
   </div>
-  {#if !hideDropdown && !message.isModerationMessage}
+  {#if !hideDropdown && !message.isModerationMessage && menuItems.length > 0}
     <Menu items={menuItems} visible={$hoveredItem === message.messageId} class="mr-2 ml-auto context-menu">
       <Icon slot="activator" style="font-size: 1.5em;">more_vert</Icon>
     </Menu>

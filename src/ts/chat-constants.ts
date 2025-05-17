@@ -145,7 +145,7 @@ export const chatUserActionsItems = [
   {
     value: ChatUserActions.UNBAN,
     text: 'Unhide user on this channel',
-    icon: 'ADD_CIRCLE', 
+    icon: 'ADD_CIRCLE',
     condition: [
       {
         isModerator: true,
