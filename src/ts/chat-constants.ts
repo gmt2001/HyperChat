@@ -74,7 +74,24 @@ export const chatTimeoutOptions = [
   { value: ChatTimeoutOptions.THIRTY_MIN, label: '30 minutes' },
   { value: ChatTimeoutOptions.ONE_DAY, label: '24 hours' }
 ];
-
+/*
+ * `condition` is an array of objects, defining when an action should be shown in the menu
+ *
+ * Conditions (keys) within an object are `AND`
+ * 
+ * Array entries are `OR`
+ * 
+ * The value of each condition in an object is a boolean, indicating whether the condition must be true or false
+ * 
+ * To ignore a supported condition for a particular case, it must not be defined
+ *
+ *  Supported conditions:
+ *   - isSelf: If this message was sent by the current user
+ *   - isModerator: If the current user is a moderator
+ *   - isMessageRemoved: If this message was removed by any action (retracted, deleted, timeout, ban)
+ *   - isReplay: If the current user is watching a replay, instead of a live stream
+ *   - isBanned: If sender of this message is banned
+ */
 export const chatUserActionsItems = [
   {
     value: ChatUserActions.REPORT_USER,
