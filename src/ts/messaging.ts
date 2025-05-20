@@ -243,6 +243,7 @@ const executeChatAction = async (
     }
 
     if (action === ChatUserActions.CHECK_BANNED) {
+      console.log('checkIsBannedResponse', ChatUserActions.UNBAN in menuItems);
       interceptor.clients.forEach(
         (clientPort) => clientPort.postMessage({
           type: 'checkIsBannedResponse',
