@@ -434,12 +434,14 @@ export const parseChatResponse = (response: string, isReplay: boolean): Ytc.Pars
     let parsedAction: Ytc.ParsedAction | undefined;
 
     try {
+      console.log(action);
       if (action.replayChatItemAction) {
+        console.log('replay');
         const replayAction = action.replayChatItemAction;
         const replayTimeMs = parseInt(replayAction.videoOffsetTimeMsec);
-        console.log(replayAction, isReplay, replayTimeMs);
         parsedAction = processCommonAction(replayAction.actions[0], isReplay, replayTimeMs);
       } else {
+        console.log('live');
         parsedAction = processLiveAction(action, isReplay, liveTimeoutMs);
       }
     } catch (error) {
