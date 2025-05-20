@@ -437,6 +437,7 @@ export const parseChatResponse = (response: string, isReplay: boolean): Ytc.Pars
       if (action.replayChatItemAction) {
         const replayAction = action.replayChatItemAction;
         const replayTimeMs = parseInt(replayAction.videoOffsetTimeMsec);
+        console.log(replayAction, isReplay, replayTimeMs);
         parsedAction = processCommonAction(replayAction.actions[0], isReplay, replayTimeMs);
       } else {
         parsedAction = processLiveAction(action, isReplay, liveTimeoutMs);
