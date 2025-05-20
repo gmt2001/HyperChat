@@ -319,7 +319,7 @@ const executeChatAction = async (
         return;
       }
       const { params, context } = parseServiceEndpoint(
-        menuItems[action].serviceEndpoint.signalServiceEndpoint.actions[0].openPopupAction.popup.showActionDialogRenderer.body.showActionDialogContentRenderer.content.formRenderer.fields[0].optionsRenderer.items[timeoutOption - 1].optionSelectableItemRenderer.submitEndpoint,
+        menuItems[action].serviceEndpoint.signalServiceEndpoint.actions[0].openPopupAction.popup.showActionDialogRenderer.body.showActionDialogContentRenderer.content[0].formRenderer.fields[0].optionsRenderer.items[timeoutOption - 1].optionSelectableItemRenderer.submitEndpoint,
         'moderateLiveChatEndpoint'
       );
       const timeoutResponse = await fetcher(`${currentDomain}/youtubei/v1/live_chat/moderate?key=${apiKey}&prettyPrint=false`, {
