@@ -307,13 +307,17 @@ const executeChatAction = async (
       });
       processSentMessage(JSON.stringify(deleteBanResponse));
     } else if (action === ChatUserActions.TIMEOUT) {
+      console.log('timeout');
       if (timeoutOption === undefined) {
+        console.log('no option');
         return;
       }
+      console.log('option=' + timeoutOption)
       const { params, context } = parseServiceEndpoint(
         menuItems[action].serviceEndpoint.signalServiceEndpoint.actions[0].openPopupAction.popup.showActionDialogRenderer.body.showActionDialogContentRenderer.content.formRenderer.fields[0].optionsRenderer.items[timeoutOption - 1].optionSelectableItemRenderer.submitEndpoint,
         'moderateLiveChatEndpoint'
       );
+      console.log('send');
       const timeoutResponse = await fetcher(`${currentDomain}/youtubei/v1/live_chat/moderate?key=${apiKey}&prettyPrint=false`, {
         ...heads,
         body: JSON.stringify({
