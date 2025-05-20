@@ -160,12 +160,9 @@
       }
       return false;
     });
-    console.log('checkIsBanned', bonk, isInitial, aMessage);
     if (aMessage !== undefined) {
-      console.log('check');
       useBanHammer(aMessage.message, ChatUserActions.CHECK_BANNED, $port);
     } else if (isInitial) {
-      console.log('retry');
       setTimeout(function () {
         checkIsBanned(bonk, false);
       }, 1000);
