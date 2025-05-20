@@ -152,7 +152,15 @@
     piledMessages = [];
   }
 
-  const checkIsBanned = (bonk: Ytc.ParsedBonk, isInitial: boolean) => {
+
+  const onBonk = (bonk: Ytc.ParsedBonk) => {
+    messageActions.forEach((action) => {
+      if (isWelcome(action)) return;
+      if (action.message.author.id === bonk.authorId) {
+        action.deleted = { replace: bonk.replacedMessage };
+      }
+    });
+
     const aMessage: Chat.MessageAction = messageActions.find((action) => {
       if (isWelcome(action)) return false;
       if (action.message.author.id === bonk.authorId) {
@@ -162,22 +170,7 @@
     });
     if (aMessage !== undefined) {
       useBanHammer(aMessage.message, ChatUserActions.CHECK_BANNED, $port);
-    } else if (isInitial) {
-      setTimeout(function () {
-        checkIsBanned(bonk, false);
-      }, 1000);
     }
-  };
-
-  const onBonk = (bonk: Ytc.ParsedBonk, isInitial: boolean) => {
-    messageActions.forEach((action) => {
-      if (isWelcome(action)) return;
-      if (action.message.author.id === bonk.authorId) {
-        action.deleted = { replace: bonk.replacedMessage };
-      }
-    });
-
-    checkIsBanned(bonk, isInitial);
 
     messageActions = messageActions;
   };
@@ -220,7 +213,7 @@
         newMessages(action, isInitial);
         break;
       case 'bonk':
-        onBonk(action.bonk, isInitial);
+        onBonk(action.bonk);
         break;
       case 'delete':
         onDelete(action.deletion);
