@@ -382,7 +382,7 @@ export const initInterceptor = (
           sendLtlMessage(message.message);
           break;
         case 'executeChatAction':
-          executeChatAction(message.message, ytcfg, message.action, message.reportOption).catch(console.error);
+          executeChatAction(message.message, ytcfg, message.action, message.reportOption, message.timeoutOption).catch(console.error);
           break;
         case 'ping':
           port.postMessage({ type: 'ping' });
