@@ -510,6 +510,7 @@ declare namespace Ytc {
       message: ParsedRun[];
     };
     showtime: number;
+    timestamp?: string;
   }
 
   interface ParsedRedirect {
@@ -524,6 +525,7 @@ declare namespace Ytc {
       }
     };
     showtime: number;
+    timestamp?: string;
   }
 
   interface ParsedPoll {
