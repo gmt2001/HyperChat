@@ -43,12 +43,12 @@ declare namespace Ytc {
         pollRenderer: PollRenderer;
       };
     };
+    markChatItemsByAuthorAsDeletedAction?: AuthorBonkedAction;
   }
 
   /** Expected YTC action object */
   interface Action extends ReplayAction {
     replayChatItemAction?: ReplayChatItemAction;
-    markChatItemsByAuthorAsDeletedAction?: AuthorBonkedAction;
     markChatItemAsDeletedAction?: MessageDeletedAction;
     liveChatReportPresenceCommand?: LiveChatReportPresenceCommand;
   }
@@ -530,11 +530,11 @@ declare namespace Ytc {
     isModerator: boolean;
   }
 
-  type ParsedMisc = ParsedPinned | ParsedSummary | ParsedRedirect | ParsedPoll | ParsedRemoveBanner | ParsedPresence;
+  type ParsedMisc = ParsedPinned | ParsedBonk | ParsedSummary | ParsedRedirect | ParsedPoll | ParsedRemoveBanner | ParsedPresence;
 
   type ParsedTimedItem = ParsedMessage | ParsedTicker;
 
-  type ParsedAction = ParsedTimedItem | ParsedBonk | ParsedDeleted | ParsedMisc;
+  type ParsedAction = ParsedTimedItem | ParsedDeleted | ParsedMisc;
 
   interface ParsedChunk {
     messages: ParsedMessage[];

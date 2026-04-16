@@ -377,6 +377,8 @@ const processCommonAction = (
     return parseTickerAction(action.addLiveChatTickerItemAction, isReplay, liveTimeoutOrReplayMs);
   } else if (action.updateLiveChatPollAction) {
     return parsePollRenderer(action.updateLiveChatPollAction.pollToUpdate.pollRenderer);
+  } else if (action.markChatItemsByAuthorAsDeletedAction) {
+    return parseAuthorBonkedAction(action.markChatItemsByAuthorAsDeletedAction);
   }
 };
 
@@ -384,8 +386,6 @@ const processLiveAction = (action: Ytc.Action, isReplay: boolean, liveTimeoutMs:
   const common = processCommonAction(action, isReplay, liveTimeoutMs);
   if (common) {
     return common;
-  } else if (action.markChatItemsByAuthorAsDeletedAction) {
-    return parseAuthorBonkedAction(action.markChatItemsByAuthorAsDeletedAction);
   } else if (action.markChatItemAsDeletedAction) {
     return parseMessageDeletedAction(action.markChatItemAsDeletedAction);
   } else if (action.liveChatReportPresenceCommand) {
