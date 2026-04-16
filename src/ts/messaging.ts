@@ -3,6 +3,7 @@ import { ytcQueue } from './queue';
 import sha1 from 'sha-1';
 import { chatReportUserOptions, ChatUserActions, ChatReportUserOptions, ChatTimeoutOptions } from '../ts/chat-constants';
 import { isReplay } from './storage';
+import type { Chat } from './typings/chat';
 
 const currentDomain = location.protocol.includes('youtube') ? (location.protocol + '//' + location.host) : 'https://www.youtube.com';
 
@@ -187,24 +188,40 @@ const executeChatAction = async (
   reportOption?: ChatReportUserOptions,
   timeoutOption?: ChatTimeoutOptions
 ): Promise<void> => {
-  if (message.params == null) return;
-
   const fetcher = async (...args: any[]): Promise<any> => {
-    return await new Promise((resolve) => {
-      const encoded = JSON.stringify(args);
-      window.addEventListener('proxyFetchResponse', (e) => {
-        const response = JSON.parse((e as CustomEvent).detail);
-        resolve(response);
-      });
+    return await new Promise((resolve, reject) => {
+      const id = `${Date.now()}_${Math.random().toString(36).slice(2)}`;
+      const encoded = JSON.stringify({ id, args });
+      const onFetchResponse = (e: Event): void => {
+        const response = JSON.parse((e as CustomEvent).detail) as {
+          id: string;
+          response?: any;
+          error?: string;
+        };
+        if (response.id !== id) return;
+        window.removeEventListener('proxyFetchResponse', onFetchResponse);
+        if (response.error != null) {
+          reject(new Error(response.error));
+          return;
+        }
+        resolve(response.response);
+      };
+      window.addEventListener('proxyFetchResponse', onFetchResponse);
       window.dispatchEvent(new CustomEvent('proxyFetchRequest', {
         detail: encoded
       }));
     });
   };
 
-  let success = true;
-  let showResult = false;
+    let success = true;
+    let showResult = false;
+  if (message.params == null) {
+    success = false;
+  }
   try {
+    if (message.params == null) {
+      throw new Error('Missing context menu params for message');
+    }
     const apiKey = ytcfg.data_.INNERTUBE_API_KEY;
     const contextMenuUrl = `${currentDomain}/youtubei/v1/live_chat/get_item_context_menu?params=` +
       `${encodeURIComponent(message.params)}&pbj=1&key=${apiKey}&prettyPrint=false`;
@@ -231,12 +248,35 @@ const executeChatAction = async (
       ...heads,
       body: JSON.stringify({ context: baseContext })
     });
+    function findServiceEndpoint(root: any, prop: string): any | null {
+      const queue = [root];
+      const visited = new Set<any>();
+      while (queue.length > 0) {
+        const current = queue.shift();
+        if (current == null || typeof current !== 'object' || visited.has(current)) continue;
+        visited.add(current);
+        if (typeof current?.[prop]?.params === 'string') {
+          return current;
+        }
+        for (const value of Object.values(current)) {
+          if (value != null && typeof value === 'object') {
+            queue.push(value);
+          }
+        }
+      }
+      return null;
+    }
     function parseServiceEndpoint(serviceEndpoint: any, prop: string): { params: string, context: any } {
+      if (typeof serviceEndpoint?.[prop]?.params !== 'string') {
+        throw new Error(`Missing service endpoint params for ${prop}`);
+      }
       const { clickTrackingParams, [prop]: { params } } = serviceEndpoint;
       const clonedContext = JSON.parse(JSON.stringify(baseContext));
-      clonedContext.clickTracking = {
-        clickTrackingParams
-      };
+      if (clickTrackingParams != null) {
+        clonedContext.clickTracking = {
+          clickTrackingParams
+        };
+      }
       return {
         params,
         context: clonedContext
@@ -273,6 +313,9 @@ const executeChatAction = async (
           context
         })
       });
+      if (moderationResponse?.error != null || moderationResponse?.success === false) {
+        throw new Error('Moderation request failed');
+      }
     } else if (action === ChatUserActions.REPORT_USER) {
       showResult = true;
       const { params, context } = parseServiceEndpoint(
@@ -286,21 +329,35 @@ const executeChatAction = async (
           context
         })
       });
-      const index = chatReportUserOptions.findIndex(d => d.value === reportOption);
-      const options = modal.actions[0].openPopupAction.popup.reportFormModalRenderer.optionsSupportedRenderers.optionsRenderer.items;
-      const submitEndpoint = options[index].optionSelectableItemRenderer.submitEndpoint;
-      const clickTrackingParams = submitEndpoint.clickTrackingParams;
-      const flagAction = submitEndpoint.flagEndpoint.flagAction;
-      context.clickTracking = {
-        clickTrackingParams
-      };
-      await fetcher(`${currentDomain}/youtubei/v1/flag/flag?key=${apiKey}&prettyPrint=false`, {
+      const options = modal?.actions?.[0]
+        ?.openPopupAction?.popup?.reportFormModalRenderer
+        ?.optionsSupportedRenderers?.optionsRenderer?.items;
+      if (!Array.isArray(options) || options.length < 1) {
+        throw new Error('Report options are missing');
+      }
+      const reportIndex = chatReportUserOptions.findIndex(d => d.value === reportOption);
+      const index = reportIndex >= 0 && reportIndex < options.length ? reportIndex : 0;
+      const submitEndpoint = options[index]?.optionSelectableItemRenderer?.submitEndpoint;
+      const clickTrackingParams = submitEndpoint?.clickTrackingParams;
+      const flagAction = submitEndpoint?.flagEndpoint?.flagAction;
+      if (flagAction == null) {
+        throw new Error('Report submit endpoint is missing');
+      }
+      if (clickTrackingParams != null) {
+        context.clickTracking = {
+          clickTrackingParams
+        };
+      }
+      const flagResponse = await fetcher(`${currentDomain}/youtubei/v1/flag/flag?key=${apiKey}&prettyPrint=false`, {
         ...heads,
         body: JSON.stringify({
           action: flagAction,
           context
         })
       });
+      if (flagResponse?.error != null || flagResponse?.success === false) {
+          throw new Error('Report request failed');
+      }
     } else if (action === ChatUserActions.REMOVE || action === ChatUserActions.BAN || action === ChatUserActions.UNBAN) {
       const { params, context } = parseServiceEndpoint(
         menuItems[action].serviceEndpoint,

@@ -38,7 +38,11 @@ declare namespace Ytc {
       targetActionId: string;
     };
     addLiveChatTickerItemAction?: AddTickerAction;
-    updateLiveChatPollAction?: UpdatePollAction;
+    updateLiveChatPollAction?: {
+      pollToUpdate: {
+        pollRenderer: PollRenderer;
+      };
+    };
   }
 
   /** Expected YTC action object */
@@ -102,6 +106,7 @@ declare namespace Ytc {
             text: RunsObj;
           };
         };
+        /** Used for identifying the banner action */
         actionId: string;
         /** Gets used for pinned messages */
         bannerProperties?: BannerPropertiesObj;
@@ -163,12 +168,6 @@ declare namespace Ytc {
 
   interface ThumbnailsWithLabel extends Thumbnails {
     accessibility?: AccessibilityObj;
-  }
-
-  interface UpdatePollAction {
-    pollToUpdate: {
-      pollRenderer: PollRenderer;
-    };
   }
 
   /** Message run object */
@@ -260,19 +259,6 @@ declare namespace Ytc {
     };
   }
 
-  interface EngagementMessageRenderer {
-    message: RunsObj[];
-    id: string;
-    timestampUsec?: IntString;
-    icon?: {
-      /** Unlocalized string */
-      iconType: string;
-    };
-    actionButton?: {
-      buttonRenderer: ButtonRenderer;
-    }
-  }
-
   interface ChatSummaryRenderer {
     liveChatSummaryId: string;
     chatSummary: RunsObj;
@@ -299,17 +285,8 @@ declare namespace Ytc {
     icon?: string;
     accessibility?: AccessibilityObj;
     isDisabled?: boolean;
-    text?: RunsObj; // | SimpleTextObj;
+    text?: RunsObj;
     command: {
-      commandMetadata?: {
-        webCommandMetadata?: {
-          apiUrl?: string;
-          sendPost?: boolean;
-        }
-      }
-      liveChatActionEndpoint?: {
-        params: string;
-      }
       urlEndpoint?: {
         url: string;
         target: string;
@@ -320,31 +297,26 @@ declare namespace Ytc {
     }
   }
 
+  interface PlaceholderRenderer { // No idea what the purpose of this is
+    id: string;
+    timestampUsec: IntString;
+  }
+
   interface PollRenderer {
-    choices: PollChoice[];
     liveChatPollId: string;
     header: {
       pollHeaderRenderer: {
         pollQuestion: RunsObj;
-        thumbnail: Thumbnails;
         metadataText: RunsObj;
-        liveChatPollType: string;
-      }
-    }
-    displayVoteResults?: boolean;
-    button?: ButtonRenderer;
-  }
-
-  interface PollChoice {
-    text: RunsObj;
-    selected: boolean;
-    voteRatio?: number;
-    votePercentage?: SimpleTextObj;
-  }
-
-  interface PlaceholderRenderer { // No idea what the purpose of this is
-    id: string;
-    timestampUsec: IntString;
+        thumbnail?: Thumbnails;
+      };
+    };
+    choices: Array<{
+      text: RunsObj;
+      selected: boolean;
+      voteRatio?: number;
+      votePercentage?: SimpleTextObj;
+    }>;
   }
 
   type Renderers = TextMessageRenderer | PaidMessageRenderer |
@@ -367,12 +339,10 @@ declare namespace Ytc {
     liveChatBannerChatSummaryRenderer?: ChatSummaryRenderer;
     /** Redirects */
     liveChatBannerRedirectRenderer?: RedirectRenderer;
-    /** Poll start */
-    pollRenderer?: PollRenderer;
-    /** Poll end + other in-chat announcements TODO */
-    liveChatViewerEngagementMessageRenderer?: EngagementMessageRenderer;
     /** ??? */
     liveChatPlaceholderItemRenderer?: PlaceholderRenderer;
+    /** Poll */
+    pollRenderer?: PollRenderer;
     liveChatModerationMessageRenderer?: ModerationMessageRenderer
   }
 
@@ -510,6 +480,7 @@ declare namespace Ytc {
       message: ParsedRun[];
     };
     showtime: number;
+    timestamp?: string;
   }
 
   interface ParsedRedirect {
@@ -524,14 +495,15 @@ declare namespace Ytc {
       }
     };
     showtime: number;
+    timestamp?: string;
   }
 
   interface ParsedPoll {
     type: 'poll';
     actionId: string;
     item: {
-      header: ParsedRun[];
       profileIcon: ParsedImage;
+      header: ParsedRun[];
       question: ParsedRun[];
       choices: Array<{
         text: ParsedRun[];
@@ -539,8 +511,7 @@ declare namespace Ytc {
         ratio?: number;
         percentage?: string;
       }>;
-    }
-    // TODO add 'action' for ending poll button
+    };
   }
 
   interface ParsedRemoveBanner {
