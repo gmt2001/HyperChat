@@ -5,6 +5,8 @@ import {
   isMembershipGiftPurchaseRenderer
 } from './chat-utils';
 
+import { isModerator } from './storage';
+
 const currentDomain = location.protocol.includes('youtube') ? (location.protocol + '//' + location.host) : 'https://www.youtube.com';
 
 // Source: https://stackoverflow.com/a/64396666
@@ -351,6 +353,11 @@ const parseTickerAction = (action: Ytc.AddTickerAction, isReplay: boolean, liveT
   };
 };
 
+const parsePresenceCommand = (action: Ytc.LiveChatReportPresenceCommand): Ytc.Misc | undefined => {
+  isModerator.set(action.liveChatUserPresent.isModerator);
+  return { type: 'presence' } as const;
+};
+
 const processCommonAction = (
   action: Ytc.ReplayAction,
   isReplay: boolean,
@@ -380,6 +387,8 @@ const processLiveAction = (action: Ytc.Action, isReplay: boolean, liveTimeoutMs:
     return parseAuthorBonkedAction(action.markChatItemsByAuthorAsDeletedAction);
   } else if (action.markChatItemAsDeletedAction) {
     return parseMessageDeletedAction(action.markChatItemAsDeletedAction);
+  } else if (action.liveChatReportPresenceCommand) {
+    return parsePresenceCommand(action.liveChatReportPresenceCommand);
   }
 };
 
