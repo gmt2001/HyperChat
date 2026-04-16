@@ -4,6 +4,7 @@ import type { Writable } from 'svelte/store';
 import { getClient, AvailableLanguages } from 'iframe-translator';
 import type { IframeTranslatorClient, AvailableLanguageCodes } from 'iframe-translator';
 import { ChatReportUserOptions, Theme, YoutubeEmojiRenderMode } from './chat-constants';
+import { ChatTimeoutOptions } from './chat-constants';
 import { createLiveTLTranslatorClient, shouldUseLiveTLTranslatorBridge } from './ltl-translation';
 import type { Chat } from './typings/chat';
 
@@ -73,6 +74,10 @@ export const alertDialog = writable(null as null | {
   title: string;
   message: string;
   color: string;
+});
+export const timeoutDialog = writable(null as null | {
+  callback: (selection: ChatTimeoutOptions) => void;
+  optionStore: Writable<null | ChatTimeoutOptions>;
 });
 export const stickySuperchats = writable([] as Ytc.ParsedTicker[]);
 export const isDark = derived(theme, ($theme) => {
