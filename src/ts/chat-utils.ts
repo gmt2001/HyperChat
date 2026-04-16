@@ -75,6 +75,7 @@ export const textIsObsoleteMemberEmoji = (text: string): boolean => {
 };
 
 export const isAllEmoji = (a: Chat.MessageAction): boolean =>
+  a.message.message !== null &&
   a.message.message.length !== 0 &&
   a.message.message.every(m => m.type === 'emoji' || (
     m.type === 'text' && (
