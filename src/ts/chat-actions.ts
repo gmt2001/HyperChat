@@ -1,5 +1,6 @@
 import { writable } from 'svelte/store';
 import { ChatReportUserOptions, ChatUserActions } from './chat-constants';
+import { ChatTimeoutOptions } from './chat-constants';
 import { reportDialog } from './storage';
 import type { Chat } from './typings/chat';
 
@@ -27,5 +28,24 @@ export function useBanHammer(
       },
       optionStore: store
     });
+  } else if (action === ChatUserActions.TIMEOUT) {
+      const store = writable(null as null | ChatTimeoutOptions);
+      timeoutDialog.set({
+          callback: (selection) => {
+              port?.postMessage({
+                  type: 'executeChatAction',
+                  message,
+                  action,
+                  timeoutOption: selection
+              });
+          },
+          optionStore: store
+      });
+  } else {
+      port?.postMessage({
+          type: 'executeChatAction',
+          message,
+          action
+      });
   }
 }
