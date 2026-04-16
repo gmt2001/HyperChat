@@ -1,4 +1,4 @@
-import type { ChatReportUserOptions } from '../chat-constants';
+import type { ChatReportUserOptions, ChatTimeoutOptions } from '../chat-constants';
 import type { Unsubscriber, YtcQueue } from '../queue';
 
 declare namespace Chat {
@@ -150,6 +150,7 @@ declare namespace Chat {
     message: Ytc.ParsedMessage;
     action: ChatUserActions;
     reportOption?: ChatReportUserOptions;
+    timeoutOption?: ChatTimeoutOptions;
   }
 
   type BackgroundMessage =

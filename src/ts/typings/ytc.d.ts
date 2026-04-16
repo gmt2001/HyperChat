@@ -436,8 +436,8 @@ declare namespace Ytc {
       customBadge?: ParsedImage;
       url?: string;
     };
-    message: ParsedRun[];
-    deletedMessage: ParsedRun[];
+    message: ParsedRun[] | null;
+    deletedMessage: ParsedRun[] | null;
     timestamp: string;
     showtime: number;
     messageId: string;

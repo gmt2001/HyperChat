@@ -306,7 +306,7 @@ const executeChatAction = async (
           .content.confirmDialogRenderer.confirmButton.buttonRenderer.serviceEndpoint,
         'moderateLiveChatEndpoint'
       );
-      await fetcher(`${currentDomain}/youtubei/v1/live_chat/moderate?key=${apiKey}&prettyPrint=false`, {
+      const moderationResponse = await fetcher(`${currentDomain}/youtubei/v1/live_chat/moderate?key=${apiKey}&prettyPrint=false`, {
         ...heads,
         body: JSON.stringify({
           params,
@@ -412,7 +412,7 @@ export const initInterceptor = (
 ): void => {
   if (source === 'ytc') {
     const queue = ytcQueue(isReplayL);
-    isReplay.set(isReplayL);
+    isReplay.set(isReplayL ?? false);
     let queueUnsub: Unsubscriber | undefined;
     const ytcInterceptor: Chat.YtcInterceptor = {
       ...interceptor,

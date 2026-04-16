@@ -356,7 +356,7 @@ const parseTickerAction = (action: Ytc.AddTickerAction, isReplay: boolean, liveT
 };
 
 const parsePresenceCommand = (action: Ytc.LiveChatReportPresenceCommand): Ytc.ParsedPresence | undefined => {
-  return { type: 'presence', isModerator: action.liveChatUserPresent.isModerator } as ParsedPresence;
+  return { type: 'presence', isModerator: action.liveChatUserPresent.isModerator } as Ytc.ParsedPresence;
 };
 
 const processCommonAction = (
