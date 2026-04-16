@@ -518,7 +518,12 @@ declare namespace Ytc {
     detailText?: string;
   }
 
-    type ParsedMisc = ParsedPinned | ParsedSummary | ParsedRedirect | ParsedPoll | ParsedRemoveBanner | { type: 'presence' };
+  interface ParsedPresence {
+    type: 'presence';
+    isModerator: boolean;
+  }
+
+  type ParsedMisc = ParsedPinned | ParsedSummary | ParsedRedirect | ParsedPoll | ParsedRemoveBanner | ParsedPresence;
 
   type ParsedTimedItem = ParsedMessage | ParsedTicker;
 

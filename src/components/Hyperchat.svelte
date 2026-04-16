@@ -301,6 +301,7 @@
       case 'ping':
         break;
       case 'presence':
+        isModerator.set(response.isModerator);
         console.log('isModerator=' + $isModerator);
         break;
       default:
