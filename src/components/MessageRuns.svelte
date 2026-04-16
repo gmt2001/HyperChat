@@ -43,21 +43,24 @@
   >
     {#each runs as run}
       {#if run.type === 'text'}
-        {#if deleted && !deletedRuns?.length}
-          {#if run.styles?.includes('bold')}
-            <strong>
-              <span>{run.text}</span>
-            </strong>
-          {:else}
-            <span>{run.text}</span>
-          {/if}
+        {#if $emojiRenderMode === YoutubeEmojiRenderMode.HIDE_ALL && textIsObsoleteMemberEmoji(String(run.text))}
         {:else}
-          {#if run.styles?.includes('bold')}
-            <strong>
-              <TranslatedMessage text={run.text} {forceTLColor} />
-            </strong>
+          {#if deleted && !deletedRuns?.length}
+            {#if run.styles?.includes('bold')}
+              <strong>
+                <span>{run.text}</span>
+              </strong>
+            {:else}
+              <span>{run.text}</span>
+            {/if}
           {:else}
-            <TranslatedMessage text={run.text} {forceTLColor} />
+            {#if run.styles?.includes('bold')}
+              <strong>
+                <TranslatedMessage text={run.text} {forceTLColor} />
+              </strong>
+            {:else}
+              <TranslatedMessage text={run.text} {forceTLColor} />
+            {/if}
           {/if}
         {/if}
       {:else if run.type === 'link'}
