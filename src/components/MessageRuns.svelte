@@ -44,6 +44,7 @@
     {#each runs as run}
       {#if run.type === 'text'}
         {#if $emojiRenderMode === YoutubeEmojiRenderMode.HIDE_ALL && textIsObsoleteMemberEmoji(String(run.text))}
+          <!-- Hide legacy member emoji placeholders (U+25A1) in hide-all mode. -->
         {:else}
           {#if deleted && !deletedRuns?.length}
             {#if run.styles?.includes('bold')}
