@@ -207,6 +207,7 @@ const executeChatAction = async (
   };
 
   let success = true;
+  let showResult = false;
   if (message.params == null) {
     success = false;
   }
@@ -292,6 +293,7 @@ const executeChatAction = async (
         })
       );
     } else if (action === ChatUserActions.BLOCK) {
+      showResult = true;
       const { params, context } = parseServiceEndpoint(
         menuItems[ChatUserActions.BLOCK].navigationEndpoint.confirmDialogEndpoint
           .content.confirmDialogRenderer.confirmButton.buttonRenderer.serviceEndpoint,
@@ -308,6 +310,7 @@ const executeChatAction = async (
         throw new Error('Moderation request failed');
       }
     } else if (action === ChatUserActions.REPORT_USER) {
+      showResult = true;
       const { params, context } = parseServiceEndpoint(
         menuItems[ChatUserActions.REPORT_USER].serviceEndpoint,
         'getReportFormEndpoint'
@@ -372,14 +375,16 @@ const executeChatAction = async (
     success = false;
   }
 
-  interceptor.clients.forEach(
-    (clientPort) => clientPort.postMessage({
-      type: 'chatUserActionResponse',
-      action: action,
-      message,
-      success
-    })
-  );
+  if (showResult) {
+    interceptor.clients.forEach(
+      (clientPort) => clientPort.postMessage({
+        type: 'chatUserActionResponse',
+        action: action,
+        message,
+        success
+      })
+    );
+  }
 };
 
 export const initInterceptor = (
