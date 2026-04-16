@@ -2,7 +2,7 @@ import type { Unsubscriber } from './queue';
 import { ytcQueue } from './queue';
 import sha1 from 'sha-1';
 import { chatReportUserOptions, ChatUserActions, ChatReportUserOptions } from '../ts/chat-constants';
-import { ChatTimeoutOptions } from '../ts/chat-constants';
+import type { ChatTimeoutOptions } from '../ts/chat-constants';
 import { isReplay } from './storage';
 import type { Chat } from './typings/chat';
 
@@ -395,7 +395,7 @@ export const initInterceptor = (
 ): void => {
   if (source === 'ytc') {
     const queue = ytcQueue(isReplayL);
-    isReplay.set(isReplayL);
+    isReplay.set(isReplayL ?? false);
     let queueUnsub: Unsubscriber | undefined;
     const ytcInterceptor: Chat.YtcInterceptor = {
       ...interceptor,

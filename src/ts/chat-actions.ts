@@ -1,7 +1,8 @@
 import { writable } from 'svelte/store';
 import { ChatReportUserOptions, ChatUserActions } from './chat-constants';
-import { ChatTimeoutOptions } from './chat-constants';
+import type { ChatTimeoutOptions } from './chat-constants';
 import { reportDialog } from './storage';
+import { timeoutDialog } from './storage';
 import type { Chat } from './typings/chat';
 
 export function useBanHammer(

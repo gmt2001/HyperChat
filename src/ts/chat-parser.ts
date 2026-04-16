@@ -176,8 +176,8 @@ const parseAddChatItemAction = (action: Ytc.AddChatItemAction, isReplay = false,
       }
     });
   }
-  const runs = actionItem.liveChatModerationMessageRenderer != null ? null : parseMessageRuns(messageRenderer.message?.runs);
-  const deletedRuns = actionItem.liveChatModerationMessageRenderer != null ? parseMessageRuns(messageRenderer.message?.runs) : null;
+  const runs = actionItem.liveChatModerationMessageRenderer != null ? [] : parseMessageRuns(messageRenderer.message?.runs);
+  const deletedRuns = actionItem.liveChatModerationMessageRenderer != null ? parseMessageRuns(messageRenderer.message?.runs) : [];
   const timestampUsec = parseInt(renderer.timestampUsec || (Date.now() * 1000).toString());
   const timestampText = messageRenderer.timestampText?.simpleText;
   const liveShowtimeMs = (timestampUsec / 1000) + liveTimeoutOrReplayMs;
@@ -356,7 +356,7 @@ const parseTickerAction = (action: Ytc.AddTickerAction, isReplay: boolean, liveT
 };
 
 const parsePresenceCommand = (action: Ytc.LiveChatReportPresenceCommand): Ytc.ParsedPresence | undefined => {
-  return { type: 'presence', isModerator: action.liveChatUserPresent.isModerator } as ParsedPresence;
+  return { type: 'presence', isModerator: action.liveChatUserPresent.isModerator } as Ytc.ParsedPresence;
 };
 
 const processCommonAction = (
