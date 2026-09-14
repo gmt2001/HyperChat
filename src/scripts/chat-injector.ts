@@ -39,17 +39,20 @@ const ensureLiveTLTranslatorHost = (): void => {
 };
 
 const chatLoaded = async (): Promise<void> => {
+  console.log('Chat loaded, injecting HyperChat');
   if (!isLiveTL && checkInjected(hcWarning)) return;
 
   const metagetter = document.createElement('script');
   metagetter.src = getScriptURL('chat-metagetter.js');
   const ytcfg: any = await new Promise((resolve) => {
+    console.log('Waiting for ytcfg...');
     window.addEventListener('fetchMeta', (event) => {
+      console.log('Got ytcfg', (event as any).detail);
       resolve(JSON.parse((event as any).detail as string));
     });
     document.body.appendChild(metagetter);
   });
-  console.log(ytcfg);
+  console.log('ytcfg:', ytcfg);
 
   // Init and inject interceptor
   initInterceptor('ytc', ytcfg, frameIsReplay());
@@ -162,9 +165,9 @@ const chatLoaded = async (): Promise<void> => {
 };
 
 if (isLiveTL) {
-  chatLoaded().catch(console.error);
+  chatLoaded().catch((err) => {console.error('Failed to load chat', err);});
 } else {
   setTimeout(() => {
-    chatLoaded().catch(console.error);
+    chatLoaded().catch((err) => {console.error('Failed to load chat', err);});
   }, 500);
 }
